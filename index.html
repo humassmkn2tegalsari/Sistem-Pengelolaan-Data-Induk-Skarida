@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen SKARIDA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #4A90D9; --primary-light: #6BB3F0; --primary-dark: #2E6BB5;
+            --glass: rgba(255,255,255,0.75); --border: rgba(255,255,255,0.4);
+            --shadow: 0 8px 32px rgba(31,38,135,0.12);
+            --text: #1a1a2e; --muted: #888; --success: #27ae60; --danger: #e74c3c; --warn: #f39c12;
+            --rad: 16px; --rad-sm: 10px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(135deg, #e0eaf5, #d5e3f3, #e8f0fa, #c8d8ec);
+            background-attachment: fixed; min-height: 100vh; color: var(--text); line-height: 1.6;
+        }
+        body::before, body::after {
+            content:''; position:fixed; border-radius:50%; filter:blur(80px); opacity:0.25; z-index:0; animation:float 20s infinite;
+        }
+        body::before { width:500px;height:500px;background:var(--primary-light);top:-100px;right:-100px; }
+        body::after { width:400px;height:400px;background:#a8d8ea;bottom:-80px;left:-80px;animation-delay:-10s; }
+        @keyframes float{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-30px)}66%{transform:translate(-20px,20px)}}
+
+        .glass { background:var(--glass); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--rad); box-shadow:var(--shadow); }
+        header { position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px; }
+        .header-inner { max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px; }
+        .logo { display:flex;align-items:center;gap:12px;font-size:1.2rem;font-weight:700;color:var(--primary-dark);cursor:pointer; }
+        .logo-icon { width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:1rem; }
+        .actions { display:flex;gap:8px;align-items:center; }
+
+        .btn { display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:var(--rad-sm);font-size:0.9rem;font-weight:600;cursor:pointer;transition:0.3s;font-family:inherit; }
+        .btn-p { background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;box-shadow:0 4px 15px rgba(74,144,217,0.3); }
+        .btn-p:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(74,144,217,0.4);}
+        .btn-s { background:var(--success);color:white; } .btn-d { background:var(--danger);color:white; }
+        .btn-g { background:rgba(74,144,217,0.1);color:var(--primary); } .btn-g:hover{background:rgba(74,144,217,0.2);}
+        .btn-sm { padding:6px 14px;font-size:0.8rem; }
+
+        .container { max-width:1200px;margin:0 auto;padding:24px;position:relative;z-index:1; }
+        .badge { padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;text-transform:uppercase; }
+        .b-admin { background:rgba(74,144,217,0.15);color:var(--primary-dark); }
+        .b-user { background:rgba(39,174,96,0.15);color:var(--success); }
+        .b-guest { background:rgba(0,0,0,0.08);color:var(--muted); }
+
+        .back-btn { display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--primary);font-weight:600;margin-bottom:20px;font-size:0.95rem;transition:0.2s; }
+        .back-btn:hover { color:var(--primary-dark); transform:translateX(-4px); }
+        .hide { display:none!important; }
+        .admin-only { display:none!important; } body.role-admin .admin-only { display:inherit!important; }
+
+        .hero { text-align:center; margin-bottom:32px; padding:20px 0; }
+        .hero h1 { font-size:2.2rem;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-0.5px; }
+        .hero p { color:var(--muted);font-size:1rem; }
+        .menu-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px; }
+        .menu-card { padding:32px;cursor:pointer;transition:0.3s;text-align:center;display:flex;flex-direction:column;align-items:center; }
+        .menu-card:hover { transform:translateY(-6px);box-shadow:0 12px 40px rgba(31,38,135,0.2);border-color:var(--primary-light); }
+        .menu-icon { font-size:3.5rem;margin-bottom:16px;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .menu-card h3 { font-size:1.25rem;font-weight:700;margin-bottom:8px;color:var(--text); }
+        .menu-card p { font-size:0.9rem;color:var(--muted);margin:0;line-height:1.5; }
+
+        .card { padding:32px; }
+        .section-title { 
+            font-size:1.1rem;
+            font-weight:700;
+            color:var(--primary-dark);
+            margin:24px 0 16px 0;
+            padding:8px 12px;
+            background:linear-gradient(135deg,var(--primary-light),var(--primary));
+            color:white;
+            border-radius:var(--rad-sm);
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        .grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px; }
+        .fg { display:flex;flex-direction:column;gap:6px; } .fg.full { grid-column:1/-1; }
+        .fg.half { grid-column:span 1; }
+        .fl { font-size:0.85rem;font-weight:600;color:#555; } .fl .req { color:var(--danger); }
+        .fi, .fs, .ft { padding:12px 16px;border:2px solid rgba(0,0,0,0.08);border-radius:var(--rad-sm);font-size:0.95rem;font-family:inherit;background:rgba(255,255,255,0.8);transition:0.3s; }
+        .fi:focus, .fs:focus, .ft:focus { outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(74,144,217,0.15);background:white; }
+        .ft { resize:vertical;min-height:80px; }
+        .fa { display:flex;gap:12px;margin-top:24px;padding-top:24px;border-top:1px solid rgba(0,0,0,0.06); flex-wrap:wrap; }
+
+        .toolbar { display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center; }
+        .search { flex:1;min-width:250px;position:relative; }
+        .search input { width:100%;padding:12px 16px 12px 44px;border:2px solid rgba(0,0,0,0.08);border-radius:var(--rad-sm);font-size:0.95rem;background:rgba(255,255,255,0.8); }
+        .search input:focus { outline:none;border-color:var(--primary); }
+        .search .ic { position:absolute;left:14px;top:50%;transform:translateY(-50%); }
+
+        .stats { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px; }
+        .stat { padding:20px;text-align:center; }
+        .sn { font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+        .sl { font-size:0.85rem;color:var(--muted);margin-top:4px; }
+
+        .tc { overflow-x:auto;border-radius:var(--rad); }
+        table { width:100%;border-collapse:collapse;font-size:0.85rem; }
+        thead { background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white; }
+        th { padding:14px 16px;text-align:left;font-weight:600;white-space:nowrap;font-size:0.8rem;text-transform:uppercase; }
+        td { padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.05); }
+        tr:hover { background:rgba(74,144,217,0.05); }
+        .st { display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600; }
+        .st.aktif { background:rgba(39,174,96,0.15);color:var(--success); }
+        .st.lulus { background:rgba(243,156,18,0.15);color:var(--warn); }
+        .st.pindah { background:rgba(231,76,60,0.15);color:var(--danger); }
+
+        .modal { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:20px; }
+        .modal.on { display:flex; }
+        .box { width:100%;max-width:600px;padding:32px;animation:pop 0.3s ease; }
+        @keyframes pop{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .mt { font-size:1.3rem;font-weight:700;margin-bottom:20px; }
+
+        .spin { display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite; }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .toast { position:fixed;top:80px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px; }
+        .t { padding:14px 24px;border-radius:var(--rad-sm);color:white;font-weight:600;font-size:0.9rem;animation:tin 0.3s,tout 0.3s 2.7s forwards;box-shadow:0 4px 15px rgba(0,0,0,0.2); }
+        .t.ok{background:var(--success);} .t.er{background:var(--danger);}
+        @keyframes tin{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+        @keyframes tout{from{opacity:1}to{opacity:0;transform:translateX(100%)}}
+
+        .empty { text-align:center;padding:40px;color:var(--muted); }
+        @media(max-width:768px){.container{padding:16px}.card{padding:20px}.grid{grid-template-columns:1fr}.fg.half{grid-column:1/-1}.logo span{display:none}.stats{grid-template-columns:1fr 1fr}.toolbar{flex-direction:column}.search{min-width:100%}}
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<header>
+    <div class="header-inner">
+        <div class="logo" onclick="navigateTo('home')">
+            <div class="logo-icon">📚</div><span>Sistem Manajemen SKARIDA</span>
+        </div>
+        <div class="actions">
+            <span class="badge b-guest" id="roleBadge">👤 Umum</span>
+            <button class="btn btn-g btn-sm" id="loginBtn" onclick="showModal('loginModal')">🔑 Login</button>
+            <button class="btn btn-g btn-sm hide" id="logoutBtn" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- 🏠 HOME VIEW -->
+    <div id="viewHome">
+        <div class="hero">
+            <h1>Buku Induk Siswa</h1>
+            <p>Pilih menu di bawah untuk melanjutkan</p>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-card glass" onclick="navigateTo('form')">
+                <div class="menu-icon">📝</div>
+                <h3>Input Data Siswa</h3>
+                <p>Tambahkan biodata siswa baru ke dalam buku induk sekolah</p>
+            </div>
+            <div class="menu-card glass" onclick="navigateTo('data')">
+                <div class="menu-icon">📊</div>
+                <h3>Lihat Data Siswa</h3>
+                <p>Cari, filter, dan tampilkan daftar siswa yang sudah terdaftar</p>
+            </div>
+            <div class="menu-card glass admin-only" onclick="navigateTo('data')">
+                <div class="menu-icon">📥</div>
+                <h3>Export & Kelola Data</h3>
+                <p>Download Excel, edit, atau hapus data (khusus Admin)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📝 FORM VIEW -->
+    <div id="viewForm" class="hide">
+        <div class="back-btn" onclick="navigateTo('home')">← Kembali ke Beranda</div>
+        <div class="card glass">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px">Form Biodata Peserta Didik</h2>
+            <p style="color:var(--muted);margin-bottom:24px;font-size:0.9rem">Isi data lengkap & benar. Field bertanda <span style="color:var(--danger)">*</span> wajib diisi.</p>
+            
+            <form id="fSiswa" onsubmit="submitForm(event)">
+                
+                <!-- A. KETERANGAN TENTANG PESERTA DIDIK -->
+                <div class="section-title">👤 A. Keterangan Tentang Peserta Didik</div>
+                <div class="grid">
+                    <div class="fg"><label class="fl">NISN <span class="req">*</span></label><input type="text" class="fi" name="nisn" required maxlength="10" pattern="\d{10}" placeholder="0012345678"></div>
+                    <div class="fg"><label class="fl">NIK <span class="req">*</span></label><input type="text" class="fi" name="nik" required maxlength="16" pattern="\d{16}" placeholder="16 digit"></div>
+                    <div class="fg full"><label class="fl">Nama Lengkap <span class="req">*</span></label><input type="text" class="fi" name="namaLengkap" required></div>
+                    <div class="fg"><label class="fl">Nama Panggilan</label><input type="text" class="fi" name="namaPanggilan"></div>
+                    <div class="fg"><label class="fl">Jenis Kelamin <span class="req">*</span></label><select class="fs" name="jenisKelamin" required><option value="">Pilih</option><option>Laki-laki</option><option>Perempuan</option></select></div>
+                    <div class="fg"><label class="fl">Tempat Lahir <span class="req">*</span></label><input type="text" class="fi" name="tempatLahir" required></div>
+                    <div class="fg"><label class="fl">Tanggal Lahir <span class="req">*</span></label><input type="date" class="fi" name="tanggalLahir" required></div>
+                    <div class="fg"><label class="fl">Agama <span class="req">*</span></label><select class="fs" name="agama" required><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
+                    <div class="fg"><label class="fl">Kewarganegaraan</label><input type="text" class="fi" name="kewarganegaraan" value="WNI"></div>
+                    <div class="fg"><label class="fl">Anak Ke-</label><input type="number" class="fi" name="anakKe" min="1" placeholder="1"></div>
+                    <div class="fg"><label class="fl">Jumlah Saudara Kandung</label><input type="number" class="fi" name="jmlSaudaraKandung" min="0"></div>
+                    <div class="fg"><label class="fl">Jumlah Saudara Tiri</label><input type="number" class="fi" name="jmlSaudaraTiri" min="0"></div>
+                    <div class="fg"><label class="fl">Jumlah Saudara Angkat</label><input type="number" class="fi" name="jmlSaudaraAngkat" min="0"></div>
+                    <div class="fg"><label class="fl">Status Yatim/Piatu</label><select class="fs" name="statusYatim"><option value="">Pilih</option><option>Yatim</option><option>Piatu</option><option>Yatim Piatu</option><option>Lengkap</option></select></div>
+                    <div class="fg"><label class="fl">Bahasa Sehari-hari</label><input type="text" class="fi" name="bahasaSehariHari" placeholder="Indonesia/Jawa/dll"></div>
+                </div>
+
+                <!-- B. KETERANGAN TEMPAT TINGGAL -->
+                <div class="section-title">🏠 B. Keterangan Tempat Tinggal</div>
+                <div class="grid">
+                    <div class="fg full"><label class="fl">Alamat Lengkap <span class="req">*</span></label><textarea class="ft" name="alamat" required rows="3"></textarea></div>
+                    <div class="fg"><label class="fl">Nomor Telepon/HP</label><input type="tel" class="fi" name="noTelepon" placeholder="08xxxxxxxxxx"></div>
+                    <div class="fg"><label class="fl">Tinggal Dengan</label><select class="fs" name="tinggalDengan"><option value="">Pilih</option><option>Orang Tua</option><option>Saudara</option><option>Asrama</option><option>Kost</option><option>Lainnya</option></select></div>
+                    <div class="fg"><label class="fl">Jarak ke Sekolah (km)</label><input type="number" class="fi" name="jarakSekolah" step="0.1" min="0"></div>
+                </div>
+
+                <!-- C. KETERANGAN KESEHATAN -->
+                <div class="section-title">🏥 C. Keterangan Kesehatan</div>
+                <div class="grid">
+                    <div class="fg"><label class="fl">Golongan Darah</label><select class="fs" name="golonganDarah"><option value="">Pilih</option><option>A</option><option>B</option><option>AB</option><option>O</option></select></div>
+                    <div class="fg"><label class="fl">Penyakit yang Pernah Diderita</label><input type="text" class="fi" name="penyakit" placeholder="- jika tidak ada"></div>
+                    <div class="fg"><label class="fl">Kelainan Jasmani</label><input type="text" class="fi" name="kelainanJasmani" placeholder="- jika tidak ada"></div>
+                    <div class="fg"><label class="fl">Tinggi Badan (cm)</label><input type="number" class="fi" name="tinggiBadan" min="0"></div>
+                    <div class="fg"><label class="fl">Berat Badan (kg)</label><input type="number" class="fi" name="beratBadan" step="0.1" min="0"></div>
+                </div>
+
+                <!-- D. KETERANGAN PENDIDIKAN -->
+                <div class="section-title">🎓 D. Keterangan Pendidikan</div>
+                <div class="grid">
+                    <div class="fg"><label class="fl">Pendidikan Sebelumnya</label><input type="text" class="fi" name="pendidikanSebelumnya" placeholder="SD/MI/..."></div>
+                    <div class="fg"><label class="fl">Tanggal & Nomor Ijazah</label><input type="text" class="fi" name="nomorIjazah"></div>
+                    <div class="fg"><label class="fl">Tanggal & Nomor STL/SKHUN</label><input type="text" class="fi" name="nomorSTL"></div>
+                    <div class="fg"><label class="fl">Lama Belajar (tahun)</label><input type="number" class="fi" name="lamaBelajar" min="0"></div>
+                    <div class="fg full"><label class="fl">Pindahan Dari Sekolah</label><input type="text" class="fi" name="pindahanDari" placeholder="Nama sekolah asal"></div>
+                    <div class="fg"><label class="fl">Diterima di Kelas</label><input type="text" class="fi" name="diterimaKelas" placeholder="VII/VIII/..."></div>
+                    <div class="fg"><label class="fl">Tanggal/Bulan/Tahun Diterima</label><input type="date" class="fi" name="tanggalDiterima"></div>
+                </div>
+
+                <!-- E. KETERANGAN AYAH KANDUNG -->
+                <div class="section-title">👨 E. Keterangan Tentang Ayah Kandung</div>
+                <div class="grid">
+                    <div class="fg full"><label class="fl">Nama Ayah</label><input type="text" class="fi" name="namaAyah"></div>
+                    <div class="fg"><label class="fl">Tempat & Tanggal Lahir</label><input type="text" class="fi" name="tempatTanggalLahirAyah"></div>
+                    <div class="fg"><label class="fl">Agama</label><select class="fs" name="agamaAyah"><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
+                    <div class="fg"><label class="fl">Kewarganegaraan</label><input type="text" class="fi" name="kewarganegaraanAyah" value="WNI"></div>
+                    <div class="fg"><label class="fl">Pendidikan</label><input type="text" class="fi" name="pendidikanAyah"></div>
+                    <div class="fg"><label class="fl">Pekerjaan</label><input type="text" class="fi" name="pekerjaanAyah"></div>
+                    <div class="fg"><label class="fl">Penghasilan per Bulan</label><input type="text" class="fi" name="penghasilanAyah" placeholder="Rp"></div>
+                    <div class="fg full"><label class="fl">Alamat Rumah</label><input type="text" class="fi" name="alamatAyah"></div>
+                    <div class="fg"><label class="fl">Status</label><select class="fs" name="statusAyah"><option value="">Pilih</option><option>Masih Hidup</option><option>Meninggal Dunia</option></select></div>
+                </div>
+
+                <!-- F. KETERANGAN IBU KANDUNG -->
+                <div class="section-title">👩 F. Keterangan Tentang Ibu Kandung</div>
+                <div class="grid">
+                    <div class="fg full"><label class="fl">Nama Ibu</label><input type="text" class="fi" name="namaIbu"></div>
+                    <div class="fg"><label class="fl">Tempat & Tanggal Lahir</label><input type="text" class="fi" name="tempatTanggalLahirIbu"></div>
+                    <div class="fg"><label class="fl">Agama</label><select class="fs" name="agamaIbu"><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
+                    <div class="fg"><label class="fl">Kewarganegaraan</label><input type="text" class="fi" name="kewarganegaraanIbu" value="WNI"></div>
+                    <div class="fg"><label class="fl">Pendidikan</label><input type="text" class="fi" name="pendidikanIbu"></div>
+                    <div class="fg"><label class="fl">Pekerjaan</label><input type="text" class="fi" name="pekerjaanIbu"></div>
+                    <div class="fg"><label class="fl">Penghasilan per Bulan</label><input type="text" class="fi" name="penghasilanIbu" placeholder="Rp"></div>
+                    <div class="fg full"><label class="fl">Alamat Rumah</label><input type="text" class="fi" name="alamatIbu"></div>
+                    <div class="fg"><label class="fl">Status</label><select class="fs" name="statusIbu"><option value="">Pilih</option><option>Masih Hidup</option><option>Meninggal Dunia</option></select></div>
+                </div>
+
+                <!-- G. KETERANGAN WALI -->
+                <div class="section-title">👤 G. Keterangan Tentang Wali</div>
+                <div class="grid">
+                    <div class="fg full"><label class="fl">Nama Wali</label><input type="text" class="fi" name="namaWali"></div>
+                    <div class="fg"><label class="fl">Tempat & Tanggal Lahir</label><input type="text" class="fi" name="tempatTanggalLahirWali"></div>
+                    <div class="fg"><label class="fl">Agama</label><select class="fs" name="agamaWali"><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
+                    <div class="fg"><label class="fl">Kewarganegaraan</label><input type="text" class="fi" name="kewarganegaraanWali" value="WNI"></div>
+                    <div class="fg"><label class="fl">Pekerjaan</label><input type="text" class="fi" name="pekerjaanWali"></div>
+                    <div class="fg"><label class="fl">Penghasilan per Bulan</label><input type="text" class="fi" name="penghasilanWali" placeholder="Rp"></div>
+                    <div class="fg full"><label class="fl">Alamat Rumah/No. Telp/HP</label><input type="text" class="fi" name="alamatWali"></div>
+                    <div class="fg"><label class="fl">Status</label><select class="fs" name="statusWali"><option value="">Pilih</option><option>Masih Hidup</option><option>Meninggal Dunia</option></select></div>
+                </div>
+
+                <!-- H. KEGEMARAN PESERTA DIDIK -->
+                <div class="section-title">🎯 H. Kegemaran Peserta Didik</div>
+                <div class="grid">
+                    <div class="fg full"><label class="fl">Kesenian</label><input type="text" class="fi" name="kegemaranKesenian" placeholder="Musik/Tari/Lukis/dll"></div>
+                    <div class="fg full"><label class="fl">Olah Raga</label><input type="text" class="fi" name="kegemaranOlahraga" placeholder="Sepak bola/Basket/dll"></div>
+                    <div class="fg full"><label class="fl">Kemasyarakatan/Organisasi</label><input type="text" class="fi" name="kegemaranOrganisasi" placeholder="Pramuka/PMR/dll"></div>
+                    <div class="fg full"><label class="fl">Lain-lain</label><input type="text" class="fi" name="kegemaranLain" placeholder="-"></div>
+                </div>
+
+                <!-- I. KETERANGAN PERKEMBANGAN -->
+                <div class="section-title">📈 I. Keterangan Perkembangan Peserta Didik</div>
+                <div class="grid">
+                    <div class="fg"><label class="fl">Menerima Beasiswa (Tahun/Kls)</label><input type="text" class="fi" name="beasiswa" placeholder="Tahun/Kelas"></div>
+                    <div class="fg"><label class="full"><label class="fl">Tanggal Meninggalkan Sekolah</label><input type="date" class="fi" name="tanggalMeninggalkanSekolah"></div>
+                    <div class="fg full"><label class="fl">Alasan Meninggalkan Sekolah</label><input type="text" class="fi" name="alasanMeninggalkan" placeholder="-"></div>
+                    <div class="fg"><label class="fl">Akhir Pendidikan (Lulus/Tidak)</label><select class="fs" name="akhirPendidikan"><option value="">Pilih</option><option>Lulus</option><option>Tidak Lulus</option></select></div>
+                    <div class="fg"><label class="fl">Tanggal Lulus</label><input type="date" class="fi" name="tanggalLulus"></div>
+                    <div class="fg"><label class="fl">Nomor/Tanggal Ijazah</label><input type="text" class="fi" name="nomorTanggalIjazah"></div>
+                    <div class="fg"><label class="fl">Nomor/Tanggal SKHUN</label><input type="text" class="fi" name="nomorTanggalSKHUN"></div>
+                </div>
+
+                <!-- J. KETERANGAN SETELAH LULUS -->
+                <div class="section-title">💼 J. Keterangan Setelah Lulus Pendidikan</div>
+                <div class="grid">
+                    <div class="fg"><label class="fl">Melanjutkan ke</label><input type="text" class="fi" name="melanjutkanKe" placeholder="SMA/SMK/..."></div>
+                    <div class="fg"><label class="fl">Bekerja di</label><input type="text" class="fi" name="bekerjaDi" placeholder="Nama perusahaan/lembaga"></div>
+                    <div class="fg"><label class="fl">Tanggal Mulai Bekerja</label><input type="date" class="fi" name="tanggalMulaiBekerja"></div>
+                    <div class="fg"><label class="fl">Penghasilan</label><input type="text" class="fi" name="penghasilanSetelahLulus" placeholder="Rp"></div>
+                </div>
+
+                <!-- DATA TAMBAHAN -->
+                <div class="section-title">📋 Data Tambahan</div>
+                <div class="grid">
+                    <div class="fg"><label class="fl">Kelas <span class="req">*</span></label><select class="fs" name="kelas" required><option value="">Pilih</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div>
+                    <div class="fg"><label class="fl">Tahun Masuk <span class="req">*</span></label><input type="number" class="fi" name="tahunMasuk" required min="2000" max="2030"></div>
+                    <div class="fg"><label class="fl">Status</label><select class="fs" name="status"><option>Aktif</option><option>Lulus</option><option>Pindah</option><option>Drop Out</option></select></div>
+                </div>
+
+                <div class="fa">
+                    <button type="submit" class="btn btn-p" id="btnSave">💾 Simpan Data</button>
+                    <button type="reset" class="btn btn-g">🔄 Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 📋 DATA VIEW -->
+    <div id="viewData" class="hide">
+        <div class="back-btn" onclick="navigateTo('home')">← Kembali ke Beranda</div>
+        <div class="stats">
+            <div class="stat glass"><div class="sn" id="sTotal">0</div><div class="sl">Total Data</div></div>
+            <div class="stat glass"><div class="sn" id="sAktif">0</div><div class="sl">Siswa Aktif</div></div>
+            <div class="stat glass"><div class="sn" id="sLulus">0</div><div class="sl">Sudah Lulus</div></div>
+        </div>
+        <div class="toolbar">
+            <div class="search"><span class="ic">🔍</span><input id="search" placeholder="Cari Nama, NISN, atau NIK..." onkeyup="searchData()"></div>
+            <button class="btn btn-s btn-sm" onclick="loadData()">🔄 Refresh</button>
+            <button class="btn btn-p btn-sm admin-only" onclick="exportXls()">📥 Export Excel</button>
+        </div>
+        <div class="tc glass">
+            <table>
+                <thead><tr><th>No</th><th>NISN</th><th>NIK</th><th>Nama Lengkap</th><th>JK</th><th>Kelas</th><th>Tahun Masuk</th><th>Status</th><th class="admin-only">Aksi</th></tr></thead>
+                <tbody id="tbody"><tr><td colspan="9" class="empty">Klik <b>Refresh</b> untuk memuat data</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 🔐 LOGIN MODAL -->
+<div class="modal" id="loginModal">
+    <div class="box glass">
+        <div class="mt">🔐 Login Sistem</div>
+        <div class="fg" style="margin-bottom:16px"><label class="fl">Username</label><input class="fi" id="uName"></div>
+        <div class="fg" style="margin-bottom:24px"><label class="fl">Password</label><input type="password" class="fi" id="uPass" onkeyup="if(event.key==='Enter')doLogin()"></div>
+        <div style="display:flex;gap:12px">
+            <button class="btn btn-p" id="btnLogin" onclick="doLogin()">Masuk</button>
+            <button class="btn btn-g" onclick="hideModal('loginModal')">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- ✏️ EDIT MODAL -->
+<div class="modal" id="editModal">
+    <div class="box glass" style="max-width:700px; max-height:90vh; overflow-y:auto;">
+        <div class="mt">✏️ Edit Data Siswa</div>
+        <form onsubmit="submitEdit(event)">
+            <input type="hidden" id="eRow">
+            <div class="grid">
+                <div class="fg"><label class="fl">NISN</label><input class="fi" id="eNisn" readonly style="background:rgba(0,0,0,0.05)"></div>
+                <div class="fg"><label class="fl">NIK</label><input class="fi" id="eNik" readonly style="background:rgba(0,0,0,0.05)"></div>
+                <div class="fg full"><label class="fl">Nama Lengkap</label><input class="fi" id="eNamaLengkap" required></div>
+                <div class="fg"><label class="fl">Tempat Lahir</label><input class="fi" id="eTempatLahir" required></div>
+                <div class="fg"><label class="fl">Tanggal Lahir</label><input type="date" class="fi" id="eTanggalLahir" required></div>
+                <div class="fg"><label class="fl">Jenis Kelamin</label><select class="fs" id="eJenisKelamin" required><option>Laki-laki</option><option>Perempuan</option></select></div>
+                <div class="fg"><label class="fl">Agama</label><select class="fs" id="eAgama" required><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
+                <div class="fg full"><label class="fl">Alamat</label><textarea class="ft" id="eAlamat" required></textarea></div>
+                <div class="fg"><label class="fl">No Telepon</label><input class="fi" id="eNoTelepon"></div>
+                <div class="fg"><label class="fl">Nama Ayah</label><input class="fi" id="eNamaAyah"></div>
+                <div class="fg"><label class="fl">Nama Ibu</label><input class="fi" id="eNamaIbu"></div>
+                <div class="fg"><label class="fl">Kelas</label><select class="fs" id="eKelas" required><option>VII</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div>
+                <div class="fg"><label class="fl">Tahun Masuk</label><input type="number" class="fi" id="eTahunMasuk" required></div>
+                <div class="fg"><label class="fl">Status</label><select class="fs" id="eStatus"><option>Aktif</option><option>Lulus</option><option>Pindah</option><option>Drop Out</option></select></div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:20px">
+                <button type="submit" class="btn btn-p" id="btnEdit">💾 Simpan</button>
+                <button type="button" class="btn btn-g" onclick="hideModal('editModal')">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// ============================================
+// ✅ URL WEB APP GOOGLE APPS SCRIPT ANDA
+// ============================================
+const API = "https://script.google.com/macros/s/AKfycbwUenLyEUB6MWfBypy2PJI0fGHnyA8NwuD0m4lr8EjgHLqUDz8JZ4OvwWytEsLobR1vhA/exec"; 
+
+let role = "guest", dataAll = [], dataFilter = [];
+
+// UTILS
+const $ = id => document.getElementById(id);
+const toast = (m,t='ok') => { const d=document.createElement('div');d.className=`t ${t}`;d.textContent=m;$('toast').append(d);setTimeout(()=>d.remove(),3000); };
+const showModal = id => $(id).classList.add('on');
+const hideModal = id => $(id).classList.remove('on');
+const fmtDate = d => d ? new Date(d).toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'}) : '-';
+const toInputDate = d => d ? new Date(d).toISOString().split('T')[0] : '';
+
+// NAVIGATION
+function navigateTo(view) {
+    document.getElementById('viewHome').classList.toggle('hide', view !== 'home');
+    document.getElementById('viewForm').classList.toggle('hide', view !== 'form');
+    document.getElementById('viewData').classList.toggle('hide', view !== 'data');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if(view === 'data') loadData();
+}
+
+// AUTH
+async function doLogin(){
+    const b=$('btnLogin'), u=$('uName').value.trim(), p=$('uPass').value;
+    if(!u||!p) return toast('Isi username & password!','er');
+    b.innerHTML='<span class="spin"></span> Masuk...'; b.disabled=true;
+    try{
+        const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'login',username:u,password:p})});
+        const d=await r.json();
+        if(d.success){
+            role=d.role;
+            document.body.className=`role-${role}`;
+            $('roleBadge').textContent = role==='admin' ? '👑 Admin' : '👤 User';
+            $('roleBadge').className = role==='admin' ? 'badge b-admin' : 'badge b-user';
+            $('loginBtn').classList.add('hide'); $('logoutBtn').classList.remove('hide');
+            hideModal('loginModal'); $('uName').value=''; $('uPass').value='';
+            sessionStorage.setItem('role', role);
+            toast('Login berhasil!');
+        } else toast(d.message,'er');
+    }catch(e){toast('Gagal terhubung ke server!','er')}
+    b.textContent='Masuk'; b.disabled=false;
+}
+
+function logout(){
+    role='guest'; document.body.className=''; $('roleBadge').textContent='👤 Umum'; $('roleBadge').className='badge b-guest';
+    $('loginBtn').classList.remove('hide'); $('logoutBtn').classList.add('hide');
+    sessionStorage.removeItem('role'); toast('Logout berhasil');
+}
+
+window.onload = () => { 
+    navigateTo('home');
+    if(sessionStorage.getItem('role')){ 
+        role=sessionStorage.getItem('role'); 
+        document.body.className=`role-${role}`;
+        $('roleBadge').textContent = role==='admin' ? '👑 Admin' : '👤 User';
+        $('roleBadge').className = role==='admin' ? 'badge b-admin' : 'badge b-user';
+        $('loginBtn').classList.add('hide'); $('logoutBtn').classList.remove('hide');
+    } 
+};
+
+// FORM SUBMIT
+async function submitForm(e){
+    e.preventDefault(); 
+    const b=$('btnSave'); 
+    b.innerHTML='<span class="spin"></span> Menyimpan...'; 
+    b.disabled=true;
+    
+    const d={action:'insert'}; 
+    new FormData(e.target).forEach((v,k)=>d[k]=v);
+    
+    try{
+        const r=await fetch(API,{method:'POST',body:JSON.stringify(d)}); 
+        const res=await r.json();
+        if(res.success){
+            toast('Data berhasil disimpan! No: '+res.noUrut); 
+            e.target.reset();
+        } else toast(res.message,'er');
+    }catch(e){
+        toast('Gagal menyimpan!','er')
+    }
+    b.innerHTML='💾 Simpan Data'; 
+    b.disabled=false;
+}
+
+// LOAD & SEARCH
+async function loadData(){
+    const tb=$('tbody'); 
+    tb.innerHTML='<tr><td colspan="9" class="empty"><span class="spin" style="border-top-color:var(--primary)"></span><p>Memuat...</p></td></tr>';
+    try{
+        const kw=$('search').value;
+        const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'getData',search:kw})}); 
+        const res=await r.json();
+        if(res.success){ 
+            dataAll=res.data; 
+            dataFilter=res.data; 
+            render(); 
+        }
+    }catch(e){ 
+        tb.innerHTML='<tr><td colspan="9" class="empty">⚠️ Gagal memuat data</td></tr>'; 
+    }
+}
+
+function searchData(){ loadData(); }
+
+function render(){
+    const tb=$('tbody');
+    if(!dataFilter.length) return tb.innerHTML='<tr><td colspan="9" class="empty">📭 Tidak ada data</td></tr>';
+    
+    tb.innerHTML=dataFilter.map((r,i)=>`
+        <tr>
+            <td>${i+1}</td>
+            <td><code style="background:rgba(0,0,0,0.05);padding:2px 6px;border-radius:4px">${r.nisn||'-'}</code></td>
+            <td style="font-size:0.8rem">${r.nik||'-'}</td>
+            <td><b>${r.namaLengkap||r.nama||'-'}</b></td>
+            <td>${r.jenisKelamin==='Laki-laki'?'👦 L':'👧 P'}</td>
+            <td><b>${r.kelas||'-'}</b></td>
+            <td>${r.tahunMasuk||'-'}</td>
+            <td><span class="st ${(r.status||'aktif').toLowerCase()}">${r.status||'Aktif'}</span></td>
+            <td class="admin-only">
+                <div style="display:flex;gap:4px">
+                    <button class="btn btn-p btn-sm" onclick='edit(${JSON.stringify(r).replace(/'/g,"'")})'>✏️</button>
+                    <button class="btn btn-d btn-sm" onclick="del(${r.noUrut},'${(r.namaLengkap||r.nama||'').replace(/'/g,"'")}')">🗑️</button>
+                </div>
+            </td>
+        </tr>`).join('');
+    
+    $('sTotal').textContent=dataFilter.length;
+    $('sAktif').textContent=dataFilter.filter(d=>d.status==='Aktif').length;
+    $('sLulus').textContent=dataFilter.filter(d=>d.status==='Lulus').length;
+}
+
+// EDIT & DELETE
+function edit(r){
+    $('eRow').value=r.noUrut; 
+    $('eNisn').value=r.nisn; 
+    $('eNik').value=r.nik; 
+    $('eNamaLengkap').value=r.namaLengkap||r.nama||'';
+    $('eTempatLahir').value=r.tempatLahir||''; 
+    $('eTanggalLahir').value=toInputDate(r.tanggalLahir); 
+    $('eJenisKelamin').value=r.jenisKelamin||'';
+    $('eAgama').value=r.agama||''; 
+    $('eAlamat').value=r.alamat||''; 
+    $('eNoTelepon').value=r.noTelepon||'';
+    $('eNamaAyah').value=r.namaAyah||''; 
+    $('eNamaIbu').value=r.namaIbu||''; 
+    $('eKelas').value=r.kelas||''; 
+    $('eTahunMasuk').value=r.tahunMasuk||''; 
+    $('eStatus').value=r.status||'Aktif';
+    showModal('editModal');
+}
+
+async function submitEdit(e){
+    e.preventDefault(); 
+    const b=$('btnEdit'); 
+    b.innerHTML='<span class="spin"></span> Menyimpan...'; 
+    b.disabled=true;
+    
+    const d={
+        action:'update', 
+        rowNum:$('eRow').value, 
+        nisn:$('eNisn').value,
+        namaLengkap:$('eNamaLengkap').value, 
+        tempatLahir:$('eTempatLahir').value, 
+        tanggalLahir:$('eTanggalLahir').value, 
+        jenisKelamin:$('eJenisKelamin').value, 
+        agama:$('eAgama').value, 
+        alamat:$('eAlamat').value, 
+        noTelepon:$('eNoTelepon').value,
+        namaAyah:$('eNamaAyah').value, 
+        namaIbu:$('eNamaIbu').value, 
+        kelas:$('eKelas').value, 
+        tahunMasuk:$('eTahunMasuk').value, 
+        status:$('eStatus').value
+    };
+    
+    try{
+        const r=await fetch(API,{method:'POST',body:JSON.stringify(d)}); 
+        const res=await r.json();
+        if(res.success){
+            toast('Data diupdate!'); 
+            hideModal('editModal'); 
+            loadData();
+        } else toast(res.message,'er');
+    }catch(e){
+        toast('Gagal update!','er')
+    }
+    b.innerHTML='💾 Simpan'; 
+    b.disabled=false;
+}
+
+async function del(nm,nama){
+    if(!confirm(`Hapus data "${nama}"?`)) return;
+    try{
+        const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'delete',rowNum:nm})}); 
+        const res=await r.json();
+        if(res.success){
+            toast('Data dihapus!'); 
+            loadData();
+        } else toast(res.message,'er');
+    }catch(e){
+        toast('Gagal hapus!','er')
+    }
+}
+
+// EXPORT
+function exportXls(){
+    if(!dataFilter.length) return toast('Tidak ada data!','er');
+    
+    const ws=XLSX.utils.json_to_sheet(dataFilter.map((r,i)=>({
+        'No':i+1, 
+        'NISN':r.nisn, 
+        'NIK':r.nik, 
+        'Nama Lengkap':r.namaLengkap||r.nama, 
+        'Nama Panggilan':r.namaPanggilan,
+        'Jenis Kelamin':r.jenisKelamin, 
+        'Tempat Lahir':r.tempatLahir, 
+        'Tanggal Lahir':fmtDate(r.tanggalLahir),
+        'Agama':r.agama, 
+        'Alamat':r.alamat, 
+        'No Telepon':r.noTelepon,
+        'Nama Ayah':r.namaAyah, 
+        'Nama Ibu':r.namaIbu, 
+        'Kelas':r.kelas, 
+        'Tahun Masuk':r.tahunMasuk, 
+        'Status':r.status
+    })));
+    
+    ws['!cols']=[{wch:5},{wch:12},{wch:18},{wch:30},{wch:15},{wch:10},{wch:20},{wch:12},{wch:10},{wch:30},{wch:15},{wch:20},{wch:20},{wch:8},{wch:10},{wch:10}];
+    const wb=XLSX.utils.book_new(); 
+    XLSX.utils.book_append_sheet(wb,ws,'Buku Induk');
+    const kw=$('search').value.trim(); 
+    const fn=kw?`BukuInduk_${kw.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.xlsx`:`BukuInduk_Siswa_${new Date().toISOString().slice(0,10)}.xlsx`;
+    XLSX.writeFile(wb,fn); 
+    toast(`"${fn}" berhasil didownload!`);
+}
+</script>
+</body>
+</html>
