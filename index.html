@@ -28,8 +28,8 @@
         .glass { background:var(--glass); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--rad); box-shadow:var(--shadow); }
         header { position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px; }
         .header-inner { max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px; }
-        .logo { display:flex;align-items:center;gap:12px;font-size:1.2rem;font-weight:700;color:var(--primary-dark);cursor:pointer; }
-        .logo-icon { width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:1rem; }
+        .logo { display:flex;align-items:center;gap:12px;cursor:pointer; }
+        .logo-img { height:40px;width:auto;border-radius:8px; }
         .actions { display:flex;gap:8px;align-items:center; }
 
         .btn { display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:var(--rad-sm);font-size:0.9rem;font-weight:600;cursor:pointer;transition:0.3s;font-family:inherit; }
@@ -43,7 +43,6 @@
         .badge { padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;text-transform:uppercase; }
         .b-admin { background:rgba(74,144,217,0.15);color:var(--primary-dark); }
         .b-user { background:rgba(39,174,96,0.15);color:var(--success); }
-        .b-guest { background:rgba(0,0,0,0.08);color:var(--muted); }
 
         .back-btn { display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--primary);font-weight:600;margin-bottom:20px;font-size:0.95rem;transition:0.2s; }
         .back-btn:hover { color:var(--primary-dark); transform:translateX(-4px); }
@@ -76,12 +75,27 @@
         }
         .grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px; }
         .fg { display:flex;flex-direction:column;gap:6px; } .fg.full { grid-column:1/-1; }
-        .fg.half { grid-column:span 1; }
         .fl { font-size:0.85rem;font-weight:600;color:#555; } .fl .req { color:var(--danger); }
         .fi, .fs, .ft { padding:12px 16px;border:2px solid rgba(0,0,0,0.08);border-radius:var(--rad-sm);font-size:0.95rem;font-family:inherit;background:rgba(255,255,255,0.8);transition:0.3s; }
         .fi:focus, .fs:focus, .ft:focus { outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(74,144,217,0.15);background:white; }
         .ft { resize:vertical;min-height:80px; }
         .fa { display:flex;gap:12px;margin-top:24px;padding-top:24px;border-top:1px solid rgba(0,0,0,0.06); flex-wrap:wrap; }
+
+        /* Jurusan Selection */
+        .jurusan-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:24px; }
+        .jurusan-card { 
+            padding:28px;cursor:pointer;transition:0.3s;text-align:center;
+            border:2px solid transparent;border-radius:var(--rad);
+            background:var(--glass);backdrop-filter:blur(20px);
+        }
+        .jurusan-card:hover { 
+            transform:translateY(-4px);
+            border-color:var(--primary);
+            box-shadow:0 8px 24px rgba(74,144,217,0.3);
+        }
+        .jurusan-icon { font-size:3rem;margin-bottom:12px; }
+        .jurusan-card h3 { font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--text); }
+        .jurusan-card p { font-size:0.85rem;color:var(--muted);margin:0; }
 
         .toolbar { display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center; }
         .search { flex:1;min-width:250px;position:relative; }
@@ -120,7 +134,7 @@
         @keyframes tout{from{opacity:1}to{opacity:0;transform:translateX(100%)}}
 
         .empty { text-align:center;padding:40px;color:var(--muted); }
-        @media(max-width:768px){.container{padding:16px}.card{padding:20px}.grid{grid-template-columns:1fr}.fg.half{grid-column:1/-1}.logo span{display:none}.stats{grid-template-columns:1fr 1fr}.toolbar{flex-direction:column}.search{min-width:100%}}
+        @media(max-width:768px){.container{padding:16px}.card{padding:20px}.grid{grid-template-columns:1fr}.logo-img{height:32px}.stats{grid-template-columns:1fr 1fr}.toolbar{flex-direction:column}.search{min-width:100%}}
     </style>
 </head>
 <body>
@@ -130,12 +144,11 @@
 <header>
     <div class="header-inner">
         <div class="logo" onclick="navigateTo('home')">
-            <div class="logo-icon">📚</div><span>Sistem Manajemen SKARIDA</span>
+            <img src="https://lh3.googleusercontent.com/d/15zyF01OHtEgTl8p6bvEkz7xw30ByE2en" alt="Logo SKARIDA" class="logo-img">
         </div>
         <div class="actions">
-            <span class="badge b-guest" id="roleBadge">👤 Umum</span>
-            <button class="btn btn-g btn-sm" id="loginBtn" onclick="showModal('loginModal')">🔑 Login</button>
-            <button class="btn btn-g btn-sm hide" id="logoutBtn" onclick="logout()">🚪 Logout</button>
+            <span class="badge b-user" id="roleBadge">👤 User</span>
+            <button class="btn btn-g btn-sm" id="logoutBtn" onclick="logout()">🚪 Logout</button>
         </div>
     </div>
 </header>
@@ -145,35 +158,69 @@
     <div id="viewHome">
         <div class="hero">
             <h1>Buku Induk Siswa</h1>
-            <p>Pilih menu di bawah untuk melanjutkan</p>
+            <p>Selamat datang, silakan pilih menu di bawah</p>
         </div>
         <div class="menu-grid">
-            <div class="menu-card glass" onclick="navigateTo('form')">
+            <div class="menu-card glass" onclick="navigateTo('jurusan')">
                 <div class="menu-icon">📝</div>
                 <h3>Input Data Siswa</h3>
                 <p>Tambahkan biodata siswa baru ke dalam buku induk sekolah</p>
             </div>
-            <div class="menu-card glass" onclick="navigateTo('data')">
+            <div class="menu-card glass admin-only" onclick="navigateTo('data')">
                 <div class="menu-icon">📊</div>
                 <h3>Lihat Data Siswa</h3>
                 <p>Cari, filter, dan tampilkan daftar siswa yang sudah terdaftar</p>
             </div>
-            <div class="menu-card glass admin-only" onclick="navigateTo('data')">
-                <div class="menu-icon">📥</div>
-                <h3>Export & Kelola Data</h3>
-                <p>Download Excel, edit, atau hapus data (khusus Admin)</p>
+        </div>
+    </div>
+
+    <!-- 🎓 JURUSAN SELECTION VIEW -->
+    <div id="viewJurusan" class="hide">
+        <div class="back-btn" onclick="navigateTo('home')">← Kembali ke Beranda</div>
+        <div class="card glass">
+            <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px">Pilih Jurusan</h2>
+            <p style="color:var(--muted);margin-bottom:24px;font-size:0.9rem">Pilih jurusan untuk melanjutkan input data siswa</p>
+            
+            <div class="jurusan-grid">
+                <div class="jurusan-card" onclick="selectJurusan('APHP')">
+                    <div class="jurusan-icon">🌾</div>
+                    <h3>APHP</h3>
+                    <p>Agribisnis Pengolahan Hasil Pertanian</p>
+                </div>
+                <div class="jurusan-card" onclick="selectJurusan('DPIB')">
+                    <div class="jurusan-icon">🏗️</div>
+                    <h3>DPIB</h3>
+                    <p>Desain Pemodelan & Informasi Bangunan</p>
+                </div>
+                <div class="jurusan-card" onclick="selectJurusan('PSPT')">
+                    <div class="jurusan-icon">📺</div>
+                    <h3>PSPT</h3>
+                    <p>Produksi dan Siaran Program Televisi</p>
+                </div>
+                <div class="jurusan-card" onclick="selectJurusan('KKBT')">
+                    <div class="jurusan-icon">🎨</div>
+                    <h3>KKBT</h3>
+                    <p>Kriya Kreatif Batik & Tekstil</p>
+                </div>
+                <div class="jurusan-card" onclick="selectJurusan('TKR')">
+                    <div class="jurusan-icon">🚗</div>
+                    <h3>TKR</h3>
+                    <p>Teknik Kendaraan Ringan</p>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 📝 FORM VIEW -->
     <div id="viewForm" class="hide">
-        <div class="back-btn" onclick="navigateTo('home')">← Kembali ke Beranda</div>
+        <div class="back-btn" onclick="navigateTo('jurusan')">← Kembali ke Pilihan Jurusan</div>
         <div class="card glass">
             <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px">Form Biodata Peserta Didik</h2>
+            <p style="color:var(--muted);margin-bottom:24px;font-size:0.9rem">Jurusan: <strong id="displayJurusan" style="color:var(--primary)"></strong></p>
             <p style="color:var(--muted);margin-bottom:24px;font-size:0.9rem">Isi data lengkap & benar. Field bertanda <span style="color:var(--danger)">*</span> wajib diisi.</p>
             
             <form id="fSiswa" onsubmit="submitForm(event)">
+                <input type="hidden" name="jurusan" id="inputJurusan">
                 
                 <!-- A. KETERANGAN TENTANG PESERTA DIDIK -->
                 <div class="section-title">👤 A. Keterangan Tentang Peserta Didik</div>
@@ -276,35 +323,6 @@
                     <div class="fg full"><label class="fl">Lain-lain</label><input type="text" class="fi" name="kegemaranLain" placeholder="-"></div>
                 </div>
 
-                <!-- I. KETERANGAN PERKEMBANGAN -->
-                <div class="section-title">📈 I. Keterangan Perkembangan Peserta Didik</div>
-                <div class="grid">
-                    <div class="fg"><label class="fl">Menerima Beasiswa (Tahun/Kls)</label><input type="text" class="fi" name="beasiswa" placeholder="Tahun/Kelas"></div>
-                    <div class="fg"><label class="full"><label class="fl">Tanggal Meninggalkan Sekolah</label><input type="date" class="fi" name="tanggalMeninggalkanSekolah"></div>
-                    <div class="fg full"><label class="fl">Alasan Meninggalkan Sekolah</label><input type="text" class="fi" name="alasanMeninggalkan" placeholder="-"></div>
-                    <div class="fg"><label class="fl">Akhir Pendidikan (Lulus/Tidak)</label><select class="fs" name="akhirPendidikan"><option value="">Pilih</option><option>Lulus</option><option>Tidak Lulus</option></select></div>
-                    <div class="fg"><label class="fl">Tanggal Lulus</label><input type="date" class="fi" name="tanggalLulus"></div>
-                    <div class="fg"><label class="fl">Nomor/Tanggal Ijazah</label><input type="text" class="fi" name="nomorTanggalIjazah"></div>
-                    <div class="fg"><label class="fl">Nomor/Tanggal SKHUN</label><input type="text" class="fi" name="nomorTanggalSKHUN"></div>
-                </div>
-
-                <!-- J. KETERANGAN SETELAH LULUS -->
-                <div class="section-title">💼 J. Keterangan Setelah Lulus Pendidikan</div>
-                <div class="grid">
-                    <div class="fg"><label class="fl">Melanjutkan ke</label><input type="text" class="fi" name="melanjutkanKe" placeholder="SMA/SMK/..."></div>
-                    <div class="fg"><label class="fl">Bekerja di</label><input type="text" class="fi" name="bekerjaDi" placeholder="Nama perusahaan/lembaga"></div>
-                    <div class="fg"><label class="fl">Tanggal Mulai Bekerja</label><input type="date" class="fi" name="tanggalMulaiBekerja"></div>
-                    <div class="fg"><label class="fl">Penghasilan</label><input type="text" class="fi" name="penghasilanSetelahLulus" placeholder="Rp"></div>
-                </div>
-
-                <!-- DATA TAMBAHAN -->
-                <div class="section-title">📋 Data Tambahan</div>
-                <div class="grid">
-                    <div class="fg"><label class="fl">Kelas <span class="req">*</span></label><select class="fs" name="kelas" required><option value="">Pilih</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div>
-                    <div class="fg"><label class="fl">Tahun Masuk <span class="req">*</span></label><input type="number" class="fi" name="tahunMasuk" required min="2000" max="2030"></div>
-                    <div class="fg"><label class="fl">Status</label><select class="fs" name="status"><option>Aktif</option><option>Lulus</option><option>Pindah</option><option>Drop Out</option></select></div>
-                </div>
-
                 <div class="fa">
                     <button type="submit" class="btn btn-p" id="btnSave">💾 Simpan Data</button>
                     <button type="reset" class="btn btn-g">🔄 Reset</button>
@@ -313,7 +331,7 @@
         </div>
     </div>
 
-    <!-- 📋 DATA VIEW -->
+    <!-- 📋 DATA VIEW (Admin Only) -->
     <div id="viewData" class="hide">
         <div class="back-btn" onclick="navigateTo('home')">← Kembali ke Beranda</div>
         <div class="stats">
@@ -328,8 +346,8 @@
         </div>
         <div class="tc glass">
             <table>
-                <thead><tr><th>No</th><th>NISN</th><th>NIK</th><th>Nama Lengkap</th><th>JK</th><th>Kelas</th><th>Tahun Masuk</th><th>Status</th><th class="admin-only">Aksi</th></tr></thead>
-                <tbody id="tbody"><tr><td colspan="9" class="empty">Klik <b>Refresh</b> untuk memuat data</td></tr></tbody>
+                <thead><tr><th>No</th><th>NISN</th><th>NIK</th><th>Nama Lengkap</th><th>JK</th><th>Jurusan</th><th>Status</th><th class="admin-only">Aksi</th></tr></thead>
+                <tbody id="tbody"><tr><td colspan="8" class="empty">Klik <b>Refresh</b> untuk memuat data</td></tr></tbody>
             </table>
         </div>
     </div>
@@ -343,7 +361,6 @@
         <div class="fg" style="margin-bottom:24px"><label class="fl">Password</label><input type="password" class="fi" id="uPass" onkeyup="if(event.key==='Enter')doLogin()"></div>
         <div style="display:flex;gap:12px">
             <button class="btn btn-p" id="btnLogin" onclick="doLogin()">Masuk</button>
-            <button class="btn btn-g" onclick="hideModal('loginModal')">Batal</button>
         </div>
     </div>
 </div>
@@ -354,6 +371,7 @@
         <div class="mt">✏️ Edit Data Siswa</div>
         <form onsubmit="submitEdit(event)">
             <input type="hidden" id="eRow">
+            <input type="hidden" id="eJurusan">
             <div class="grid">
                 <div class="fg"><label class="fl">NISN</label><input class="fi" id="eNisn" readonly style="background:rgba(0,0,0,0.05)"></div>
                 <div class="fg"><label class="fl">NIK</label><input class="fi" id="eNik" readonly style="background:rgba(0,0,0,0.05)"></div>
@@ -366,8 +384,6 @@
                 <div class="fg"><label class="fl">No Telepon</label><input class="fi" id="eNoTelepon"></div>
                 <div class="fg"><label class="fl">Nama Ayah</label><input class="fi" id="eNamaAyah"></div>
                 <div class="fg"><label class="fl">Nama Ibu</label><input class="fi" id="eNamaIbu"></div>
-                <div class="fg"><label class="fl">Kelas</label><select class="fs" id="eKelas" required><option>VII</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div>
-                <div class="fg"><label class="fl">Tahun Masuk</label><input type="number" class="fi" id="eTahunMasuk" required></div>
                 <div class="fg"><label class="fl">Status</label><select class="fs" id="eStatus"><option>Aktif</option><option>Lulus</option><option>Pindah</option><option>Drop Out</option></select></div>
             </div>
             <div style="display:flex;gap:12px;margin-top:20px">
@@ -384,7 +400,7 @@
 // ============================================
 const API = "https://script.google.com/macros/s/AKfycbwUenLyEUB6MWfBypy2PJI0fGHnyA8NwuD0m4lr8EjgHLqUDz8JZ4OvwWytEsLobR1vhA/exec"; 
 
-let role = "guest", dataAll = [], dataFilter = [];
+let role = "guest", currentJurusan = "", dataAll = [], dataFilter = [];
 
 // UTILS
 const $ = id => document.getElementById(id);
@@ -396,11 +412,37 @@ const toInputDate = d => d ? new Date(d).toISOString().split('T')[0] : '';
 
 // NAVIGATION
 function navigateTo(view) {
+    // Check login
+    if (role === 'guest') {
+        showModal('loginModal');
+        return;
+    }
+    
     document.getElementById('viewHome').classList.toggle('hide', view !== 'home');
+    document.getElementById('viewJurusan').classList.toggle('hide', view !== 'jurusan');
     document.getElementById('viewForm').classList.toggle('hide', view !== 'form');
     document.getElementById('viewData').classList.toggle('hide', view !== 'data');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if(view === 'data') loadData();
+}
+
+// JURUSAN SELECTION
+function selectJurusan(jurusan) {
+    currentJurusan = jurusan;
+    $('inputJurusan').value = jurusan;
+    $('displayJurusan').textContent = getJurusanName(jurusan);
+    navigateTo('form');
+}
+
+function getJurusanName(code) {
+    const names = {
+        'APHP': 'Agribisnis Pengolahan Hasil Pertanian',
+        'DPIB': 'Desain Pemodelan & Informasi Bangunan',
+        'PSPT': 'Produksi dan Siaran Program Televisi',
+        'KKBT': 'Kriya Kreatif Batik & Tekstil',
+        'TKR': 'Teknik Kendaraan Ringan'
+    };
+    return names[code] || code;
 }
 
 // AUTH
@@ -416,30 +458,33 @@ async function doLogin(){
             document.body.className=`role-${role}`;
             $('roleBadge').textContent = role==='admin' ? '👑 Admin' : '👤 User';
             $('roleBadge').className = role==='admin' ? 'badge b-admin' : 'badge b-user';
-            $('loginBtn').classList.add('hide'); $('logoutBtn').classList.remove('hide');
             hideModal('loginModal'); $('uName').value=''; $('uPass').value='';
             sessionStorage.setItem('role', role);
             toast('Login berhasil!');
+            navigateTo('home');
         } else toast(d.message,'er');
     }catch(e){toast('Gagal terhubung ke server!','er')}
     b.textContent='Masuk'; b.disabled=false;
 }
 
 function logout(){
-    role='guest'; document.body.className=''; $('roleBadge').textContent='👤 Umum'; $('roleBadge').className='badge b-guest';
-    $('loginBtn').classList.remove('hide'); $('logoutBtn').classList.add('hide');
-    sessionStorage.removeItem('role'); toast('Logout berhasil');
+    role='guest'; document.body.className=''; $('roleBadge').textContent='👤 User'; $('roleBadge').className='badge b-user';
+    sessionStorage.removeItem('role'); 
+    navigateTo('home');
+    toast('Logout berhasil');
 }
 
+// Check login on load
 window.onload = () => { 
-    navigateTo('home');
-    if(sessionStorage.getItem('role')){ 
-        role=sessionStorage.getItem('role'); 
+    const savedRole = sessionStorage.getItem('role');
+    if(savedRole){ 
+        role = savedRole;
         document.body.className=`role-${role}`;
         $('roleBadge').textContent = role==='admin' ? '👑 Admin' : '👤 User';
         $('roleBadge').className = role==='admin' ? 'badge b-admin' : 'badge b-user';
-        $('loginBtn').classList.add('hide'); $('logoutBtn').classList.remove('hide');
-    } 
+    } else {
+        showModal('loginModal');
+    }
 };
 
 // FORM SUBMIT
@@ -449,7 +494,7 @@ async function submitForm(e){
     b.innerHTML='<span class="spin"></span> Menyimpan...'; 
     b.disabled=true;
     
-    const d={action:'insert'}; 
+    const d={action:'insert', jurusan: currentJurusan}; 
     new FormData(e.target).forEach((v,k)=>d[k]=v);
     
     try{
@@ -458,6 +503,7 @@ async function submitForm(e){
         if(res.success){
             toast('Data berhasil disimpan! No: '+res.noUrut); 
             e.target.reset();
+            navigateTo('jurusan');
         } else toast(res.message,'er');
     }catch(e){
         toast('Gagal menyimpan!','er')
@@ -466,10 +512,15 @@ async function submitForm(e){
     b.disabled=false;
 }
 
-// LOAD & SEARCH
+// LOAD & SEARCH (Admin Only)
 async function loadData(){
+    if(role !== 'admin') {
+        toast('Akses ditolak!','er');
+        return;
+    }
+    
     const tb=$('tbody'); 
-    tb.innerHTML='<tr><td colspan="9" class="empty"><span class="spin" style="border-top-color:var(--primary)"></span><p>Memuat...</p></td></tr>';
+    tb.innerHTML='<tr><td colspan="8" class="empty"><span class="spin" style="border-top-color:var(--primary)"></span><p>Memuat...</p></td></tr>';
     try{
         const kw=$('search').value;
         const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'getData',search:kw})}); 
@@ -480,15 +531,15 @@ async function loadData(){
             render(); 
         }
     }catch(e){ 
-        tb.innerHTML='<tr><td colspan="9" class="empty">⚠️ Gagal memuat data</td></tr>'; 
+        tb.innerHTML='<tr><td colspan="8" class="empty">⚠️ Gagal memuat data</td></tr>'; 
     }
 }
 
-function searchData(){ loadData(); }
+function searchData(){ if(role==='admin') loadData(); }
 
 function render(){
     const tb=$('tbody');
-    if(!dataFilter.length) return tb.innerHTML='<tr><td colspan="9" class="empty">📭 Tidak ada data</td></tr>';
+    if(!dataFilter.length) return tb.innerHTML='<tr><td colspan="8" class="empty">📭 Tidak ada data</td></tr>';
     
     tb.innerHTML=dataFilter.map((r,i)=>`
         <tr>
@@ -496,14 +547,13 @@ function render(){
             <td><code style="background:rgba(0,0,0,0.05);padding:2px 6px;border-radius:4px">${r.nisn||'-'}</code></td>
             <td style="font-size:0.8rem">${r.nik||'-'}</td>
             <td><b>${r.namaLengkap||r.nama||'-'}</b></td>
-            <td>${r.jenisKelamin==='Laki-laki'?'👦 L':'👧 P'}</td>
-            <td><b>${r.kelas||'-'}</b></td>
-            <td>${r.tahunMasuk||'-'}</td>
+            <td>${r.jenisKelamin==='Laki-laki'?'👦 L':' P'}</td>
+            <td><b>${r.jurusan||'-'}</b></td>
             <td><span class="st ${(r.status||'aktif').toLowerCase()}">${r.status||'Aktif'}</span></td>
             <td class="admin-only">
                 <div style="display:flex;gap:4px">
                     <button class="btn btn-p btn-sm" onclick='edit(${JSON.stringify(r).replace(/'/g,"'")})'>✏️</button>
-                    <button class="btn btn-d btn-sm" onclick="del(${r.noUrut},'${(r.namaLengkap||r.nama||'').replace(/'/g,"'")}')">🗑️</button>
+                    <button class="btn btn-d btn-sm" onclick="del(${r.noUrut},'${(r.namaLengkap||r.nama||'').replace(/'/g,"'")}','${r.jurusan||''}')">🗑️</button>
                 </div>
             </td>
         </tr>`).join('');
@@ -516,6 +566,7 @@ function render(){
 // EDIT & DELETE
 function edit(r){
     $('eRow').value=r.noUrut; 
+    $('eJurusan').value=r.jurusan;
     $('eNisn').value=r.nisn; 
     $('eNik').value=r.nik; 
     $('eNamaLengkap').value=r.namaLengkap||r.nama||'';
@@ -527,8 +578,6 @@ function edit(r){
     $('eNoTelepon').value=r.noTelepon||'';
     $('eNamaAyah').value=r.namaAyah||''; 
     $('eNamaIbu').value=r.namaIbu||''; 
-    $('eKelas').value=r.kelas||''; 
-    $('eTahunMasuk').value=r.tahunMasuk||''; 
     $('eStatus').value=r.status||'Aktif';
     showModal('editModal');
 }
@@ -542,6 +591,7 @@ async function submitEdit(e){
     const d={
         action:'update', 
         rowNum:$('eRow').value, 
+        jurusan:$('eJurusan').value,
         nisn:$('eNisn').value,
         namaLengkap:$('eNamaLengkap').value, 
         tempatLahir:$('eTempatLahir').value, 
@@ -552,8 +602,6 @@ async function submitEdit(e){
         noTelepon:$('eNoTelepon').value,
         namaAyah:$('eNamaAyah').value, 
         namaIbu:$('eNamaIbu').value, 
-        kelas:$('eKelas').value, 
-        tahunMasuk:$('eTahunMasuk').value, 
         status:$('eStatus').value
     };
     
@@ -572,10 +620,10 @@ async function submitEdit(e){
     b.disabled=false;
 }
 
-async function del(nm,nama){
-    if(!confirm(`Hapus data "${nama}"?`)) return;
+async function del(nm,nama,jurusan){
+    if(!confirm(`Hapus data "${nama}" dari sheet ${jurusan}?`)) return;
     try{
-        const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'delete',rowNum:nm})}); 
+        const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'delete',rowNum:nm,jurusan:jurusan})}); 
         const res=await r.json();
         if(res.success){
             toast('Data dihapus!'); 
@@ -604,12 +652,11 @@ function exportXls(){
         'No Telepon':r.noTelepon,
         'Nama Ayah':r.namaAyah, 
         'Nama Ibu':r.namaIbu, 
-        'Kelas':r.kelas, 
-        'Tahun Masuk':r.tahunMasuk, 
+        'Jurusan':r.jurusan,
         'Status':r.status
     })));
     
-    ws['!cols']=[{wch:5},{wch:12},{wch:18},{wch:30},{wch:15},{wch:10},{wch:20},{wch:12},{wch:10},{wch:30},{wch:15},{wch:20},{wch:20},{wch:8},{wch:10},{wch:10}];
+    ws['!cols']=[{wch:5},{wch:12},{wch:18},{wch:30},{wch:15},{wch:10},{wch:20},{wch:12},{wch:10},{wch:30},{wch:15},{wch:20},{wch:20},{wch:10},{wch:10}];
     const wb=XLSX.utils.book_new(); 
     XLSX.utils.book_append_sheet(wb,ws,'Buku Induk');
     const kw=$('search').value.trim(); 
