@@ -1,6 +1,6 @@
 {
-  "name": "Sistem Pengelolaan Data Induk Siswa SMK Negeri 2 Tegalsari",
-  "short_name": "Sistem Pengelolan Data Induk Skarida",
+  "name": "Buku Induk SKARIDA",
+  "short_name": "Buku Induk SKARIDA",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
