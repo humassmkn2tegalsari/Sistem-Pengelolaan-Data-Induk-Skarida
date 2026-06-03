@@ -457,7 +457,7 @@ async function doLogin(){
         if(d.success){
             role=d.role;
             document.body.className=`role-${role}`;
-            $('roleBadge').textContent = role==='admin' ? '👑 Admin' : '👤 User';
+            $('roleBadge').textContent = role==='admin' ? 'Admin' : 'User';
             $('roleBadge').className = role==='admin' ? 'badge b-admin' : 'badge b-user';
             hideModal('loginModal'); $('uName').value=''; $('uPass').value='';
             sessionStorage.setItem('role', role);
@@ -480,7 +480,7 @@ window.onload = () => {
     if(savedRole){ 
         role = savedRole;
         document.body.className=`role-${role}`;
-        $('roleBadge').textContent = role==='admin' ? '👑 Admin' : '👤 User';
+        $('roleBadge').textContent = role==='admin' ? 'Admin' : 'User';
         $('roleBadge').className = role==='admin' ? 'badge b-admin' : 'badge b-user';
     } else {
         showModal('loginModal');
