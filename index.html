@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- PWA Manifest & Meta -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Skarida ADAB">
+    
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+    <link rel="icon" type="image/png" href="favicon.png">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Pengelolaan Data Induk SMK Negeri 2 Tegalsari</title>
@@ -187,7 +201,7 @@
             <p style="color:var(--muted);margin-bottom:24px;font-size:0.9rem">Pilih jurusan untuk melanjutkan input data siswa</p>
             <div class="jurusan-grid">
                 <div class="jurusan-card" onclick="selectJurusan('APHP')">
-                    <div class="jurusan-icon"></div>
+                    <div class="jurusan-icon">🌾</div>
                     <h3>APHP</h3>
                     <p>Agribisnis Pengolahan Hasil Pertanian</p>
                 </div>
@@ -207,7 +221,7 @@
                     <p>Kriya Kreatif Batik & Tekstil</p>
                 </div>
                 <div class="jurusan-card" onclick="selectJurusan('TKR')">
-                    <div class="jurusan-icon"></div>
+                    <div class="jurusan-icon">🚗</div>
                     <h3>TKR</h3>
                     <p>Teknik Kendaraan Ringan</p>
                 </div>
@@ -285,7 +299,7 @@
                     <div class="fg"><label class="fl">Status</label><select class="fs" name="statusAyah"><option value="">Pilih</option><option>Masih Hidup</option><option>Meninggal Dunia</option></select></div>
                 </div>
 
-                <div class="section-title"> F. Keterangan Tentang Ibu Kandung</div>
+                <div class="section-title">👩 F. Keterangan Tentang Ibu Kandung</div>
                 <div class="grid">
                     <div class="fg full"><label class="fl">Nama Ibu</label><input type="text" class="fi" name="namaIbu"></div>
                     <div class="fg"><label class="fl">Tempat & Tanggal Lahir</label><input type="text" class="fi" name="tempatTanggalLahirIbu"></div>
@@ -341,7 +355,7 @@
                 <option value="APHP">🌾 APHP</option>
                 <option value="DPIB">🏗️ DPIB</option>
                 <option value="PSPT">📺 PSPT</option>
-                <option value="KKBT"> KKBT</option>
+                <option value="KKBT">🎨 KKBT</option>
                 <option value="TKR">🚗 TKR</option>
             </select>
             <button class="btn btn-s btn-sm" onclick="loadData()"> Refresh</button>
@@ -541,7 +555,7 @@ function render(){
             <td>
                 <div style="display:flex;gap:4px">
                     <button class="btn btn-p btn-sm" onclick='edit(${JSON.stringify(r).replace(/'/g,"'")})'>✏️</button>
-                    <button class="btn btn-d btn-sm" onclick="del(${r.noUrut},'${(r.namaLengkap||'').replace(/'/g,"'")}','${r.jurusan||''}')">️</button>
+                    <button class="btn btn-d btn-sm" onclick="del(${r.noUrut},'${(r.namaLengkap||'').replace(/'/g,"'")}','${r.jurusan||''}')">️🗑️</button>
                 </div>
             </td>
         </tr>`).join('');
