@@ -197,7 +197,7 @@
             </div>
         </div>
 
-        <!-- VIEW: FORM INPUT (WITH PARENT PHONE NUMBERS) -->
+        <!-- VIEW: FORM INPUT (WITH RT/RW FOR PARENTS) -->
         <div id="viewForm" class="hide animate-in">
             <div class="flex items-center gap-2 mb-4 cursor-pointer text-slate-500 hover:text-indigo-600 transition-colors tap-scale w-max" onclick="navigateTo('jurusan')">
                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
@@ -297,7 +297,7 @@
                         </div>
                     </div>
 
-                    <!-- E. Ayah (Detailed + Phone) -->
+                    <!-- E. Ayah (Detailed + Phone + RT/RW) -->
                     <div class="space-y-4 pt-4 border-t border-slate-100">
                         <div class="flex items-center gap-2">
                             <div class="w-6 h-6 rounded bg-blue-100 text-blue-600 flex items-center justify-center"><i data-lucide="users" class="w-3 h-3"></i></div>
@@ -319,8 +319,9 @@
                             <!-- NEW: No HP Ayah -->
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. HP Ayah</label><input type="tel" class="form-input" name="hpAyah" placeholder="08..."></div>
                             
-                            <!-- Split Alamat Ayah -->
+                            <!-- Split Alamat Ayah WITH RT/RW -->
                             <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Ayah (Jalan/No)</label><input type="text" class="form-input" name="alamatAyahJalan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">RT / RW Ayah</label><div class="flex gap-2"><input type="text" class="form-input" name="rtAyah" placeholder="001" style="width:50%"><input type="text" class="form-input" name="rwAyah" placeholder="002" style="width:50%"></div></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Desa/Kel Ayah</label><input type="text" class="form-input" name="alamatAyahKel"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kecamatan Ayah</label><input type="text" class="form-input" name="alamatAyahKec"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Ayah</label><input type="text" class="form-input" name="alamatAyahKota"></div>
@@ -329,7 +330,7 @@
                         </div>
                     </div>
 
-                    <!-- F. Ibu (Detailed + Phone) -->
+                    <!-- F. Ibu (Detailed + Phone + RT/RW) -->
                     <div class="space-y-4 pt-4 border-t border-slate-100">
                          <div class="flex items-center gap-2">
                             <div class="w-6 h-6 rounded bg-pink-100 text-pink-600 flex items-center justify-center"><i data-lucide="users" class="w-3 h-3"></i></div>
@@ -351,8 +352,9 @@
                             <!-- NEW: No HP Ibu -->
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. HP Ibu</label><input type="tel" class="form-input" name="hpIbu" placeholder="08..."></div>
                             
-                            <!-- Split Alamat Ibu -->
+                            <!-- Split Alamat Ibu WITH RT/RW -->
                             <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Ibu (Jalan/No)</label><input type="text" class="form-input" name="alamatIbuJalan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">RT / RW Ibu</label><div class="flex gap-2"><input type="text" class="form-input" name="rtIbu" placeholder="001" style="width:50%"><input type="text" class="form-input" name="rwIbu" placeholder="002" style="width:50%"></div></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Desa/Kel Ibu</label><input type="text" class="form-input" name="alamatIbuKel"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kecamatan Ibu</label><input type="text" class="form-input" name="alamatIbuKec"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Ibu</label><input type="text" class="form-input" name="alamatIbuKota"></div>
@@ -361,7 +363,7 @@
                         </div>
                     </div>
 
-                    <!-- G. Wali (Detailed + Phone) -->
+                    <!-- G. Wali (Detailed + Phone + RT/RW) -->
                     <div class="space-y-4 pt-4 border-t border-slate-100">
                         <div class="flex items-center gap-2">
                             <div class="w-6 h-6 rounded bg-purple-100 text-purple-600 flex items-center justify-center"><i data-lucide="shield" class="w-3 h-3"></i></div>
@@ -382,8 +384,9 @@
                             <!-- NEW: No HP Wali -->
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. HP Wali</label><input type="tel" class="form-input" name="hpWali" placeholder="08..."></div>
                             
-                            <!-- Split Alamat Wali -->
+                            <!-- Split Alamat Wali WITH RT/RW -->
                             <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Wali (Jalan/No)</label><input type="text" class="form-input" name="alamatWaliJalan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">RT / RW Wali</label><div class="flex gap-2"><input type="text" class="form-input" name="rtWali" placeholder="001" style="width:50%"><input type="text" class="form-input" name="rwWali" placeholder="002" style="width:50%"></div></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Desa/Kel Wali</label><input type="text" class="form-input" name="alamatWaliKel"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kecamatan Wali</label><input type="text" class="form-input" name="alamatWaliKec"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Wali</label><input type="text" class="form-input" name="alamatWaliKota"></div>
@@ -670,7 +673,7 @@ window.onload = () => {
     } else { showModal('loginModal'); }
 };
 
-// --- FORM SUBMISSION (COMBINING DATA WITH NEW PHONE FIELDS) ---
+// --- FORM SUBMISSION (COMBINING DATA WITH RT/RW FOR PARENTS) ---
 
 async function submitForm(e){
     e.preventDefault(); 
@@ -701,50 +704,56 @@ async function submitForm(e){
     const tanggal = formData.get('tanggalLahir') || '';
     if(tempat && tanggal) d['ttl_combined'] = `${tempat}, ${formatDateForTTL(tanggal)}`;
 
-    // Combine Father Data
+    // Combine Father Data (WITH RT/RW)
     const tAyah = formData.get('tempatLahirAyah') || '';
     const tgAyah = formData.get('tanggalLahirAyah') || '';
     if(tAyah && tgAyah) d['tempatTanggalLahirAyah'] = `${tAyah}, ${formatDateForTTL(tgAyah)}`;
     
     const alAyahJ = formData.get('alamatAyahJalan') || '';
+    const rtAyah = formData.get('rtAyah') || '';
+    const rwAyah = formData.get('rwAyah') || '';
     const alAyahK = formData.get('alamatAyahKel') || '';
     const alAyahKc = formData.get('alamatAyahKec') || '';
     const alAyahKo = formData.get('alamatAyahKota') || '';
-    let addrAyah = [alAyahJ, alAyahK, alAyahKc, alAyahKo].filter(p => p && p.trim() !== '').join(', ');
+    let addrAyah = [alAyahJ, `RT ${rtAyah}/RW ${rwAyah}`, alAyahK, alAyahKc, alAyahKo].filter(p => p && p.trim() !== '' && p !== 'RT /RW ').join(', ');
     if(addrAyah) d['alamatAyah'] = addrAyah;
     
-    // NEW: Send Father's Phone Number directly
+    // Send Father's Phone Number directly
     d['hpAyah'] = formData.get('hpAyah') || '';
 
-    // Combine Mother Data
+    // Combine Mother Data (WITH RT/RW)
     const tIbu = formData.get('tempatLahirIbu') || '';
     const tgIbu = formData.get('tanggalLahirIbu') || '';
     if(tIbu && tgIbu) d['tempatTanggalLahirIbu'] = `${tIbu}, ${formatDateForTTL(tgIbu)}`;
     
     const alIbuJ = formData.get('alamatIbuJalan') || '';
+    const rtIbu = formData.get('rtIbu') || '';
+    const rwIbu = formData.get('rwIbu') || '';
     const alIbuK = formData.get('alamatIbuKel') || '';
     const alIbuKc = formData.get('alamatIbuKec') || '';
     const alIbuKo = formData.get('alamatIbuKota') || '';
-    let addrIbu = [alIbuJ, alIbuK, alIbuKc, alIbuKo].filter(p => p && p.trim() !== '').join(', ');
+    let addrIbu = [alIbuJ, `RT ${rtIbu}/RW ${rwIbu}`, alIbuK, alIbuKc, alIbuKo].filter(p => p && p.trim() !== '' && p !== 'RT /RW ').join(', ');
     if(addrIbu) d['alamatIbu'] = addrIbu;
     
-    // NEW: Send Mother's Phone Number directly
+    // Send Mother's Phone Number directly
     d['hpIbu'] = formData.get('hpIbu') || '';
 
-    // Combine Guardian Data
+    // Combine Guardian Data (WITH RT/RW)
     const tWali = formData.get('tempatLahirWali') || '';
     const tgWali = formData.get('tanggalLahirWali') || '';
     if(tWali && tgWali) d['tempatTanggalLahirWali'] = `${tWali}, ${formatDateForTTL(tgWali)}`;
     
     const alWaliJ = formData.get('alamatWaliJalan') || '';
+    const rtWali = formData.get('rtWali') || '';
+    const rwWali = formData.get('rwWali') || '';
     const alWaliK = formData.get('alamatWaliKel') || '';
     const alWaliKc = formData.get('alamatWaliKec') || '';
     const alWaliKo = formData.get('alamatWaliKota') || '';
     const alWaliT = formData.get('alamatWaliTelp') || '';
-    let addrWali = [alWaliJ, alWaliK, alWaliKc, alWaliKo, alWaliT].filter(p => p && p.trim() !== '').join(', ');
+    let addrWali = [alWaliJ, `RT ${rtWali}/RW ${rwWali}`, alWaliK, alWaliKc, alWaliKo, alWaliT].filter(p => p && p.trim() !== '' && p !== 'RT /RW ').join(', ');
     if(addrWali) d['alamatWali'] = addrWali;
     
-    // NEW: Send Guardian's Phone Number directly
+    // Send Guardian's Phone Number directly
     d['hpWali'] = formData.get('hpWali') || '';
 
     try{
@@ -768,7 +777,7 @@ async function loadData(){
     try{
         const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'getData',search:''})}); const res=await r.json();
         if(res.success){ dataAll=res.data; applyFilters(); }
-    }catch(e){ tb.innerHTML='<tr><td colspan="8" class="p-6 text-center text-rose-500 font-bold">⚠️ Gagal memuat data</td></tr>'; }
+    }catch(e){ tb.innerHTML='<tr><td colspan="8" class="p-6 text-center text-rose-500 font-bold">️ Gagal memuat data</td></tr>'; }
 }
 
 function applyFilters(){
