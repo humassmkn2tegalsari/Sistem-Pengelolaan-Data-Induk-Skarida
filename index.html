@@ -148,7 +148,7 @@
                         <i data-lucide="user-plus" class="w-6 h-6"></i>
                     </div>
                     <h3 class="text-lg font-black text-slate-800 mb-1">Input Data Murid</h3>
-                    <p class="text-xs text-slate-500 font-medium leading-relaxed">Tambahkan biodata murid baru ke dalam buku induk sekolah sesuai jurusan.</p>
+                    <p class="text-xs text-slate-500 font-medium leading-relaxed">Tambahkan biodata murid baru dengan format detail.</p>
                 </div>
 
                 <div class="glass-card p-6 rounded-2xl cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all group admin-only tap-scale" onclick="navigateTo('data')">
@@ -197,7 +197,7 @@
             </div>
         </div>
 
-        <!-- VIEW: FORM INPUT (LENGKAP A-H) -->
+        <!-- VIEW: FORM INPUT (WITH PARENT PHONE NUMBERS) -->
         <div id="viewForm" class="hide animate-in">
             <div class="flex items-center gap-2 mb-4 cursor-pointer text-slate-500 hover:text-indigo-600 transition-colors tap-scale w-max" onclick="navigateTo('jurusan')">
                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
@@ -229,8 +229,11 @@
                             <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Nama Lengkap <span class="text-rose-500">*</span></label><input type="text" class="form-input" name="namaLengkap" required></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Nama Panggilan</label><input type="text" class="form-input" name="namaPanggilan"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Jenis Kelamin <span class="text-rose-500">*</span></label><select class="form-input" name="jenisKelamin" required><option value="">Pilih</option><option>Laki-laki</option><option>Perempuan</option></select></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tempat Lahir <span class="text-rose-500">*</span></label><input type="text" class="form-input" name="tempatLahir" required></div>
+                            
+                            <!-- Split TTL Siswa -->
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota/Tempat Lahir <span class="text-rose-500">*</span></label><input type="text" class="form-input" name="tempatLahir" required></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tanggal Lahir <span class="text-rose-500">*</span></label><input type="date" class="form-input" name="tanggalLahir" required></div>
+                            
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Agama <span class="text-rose-500">*</span></label><select class="form-input" name="agama" required><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kewarganegaraan</label><input type="text" class="form-input" name="kewarganegaraan" value="WNI"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Anak Ke-</label><input type="number" class="form-input" name="anakKe" min="1"></div>
@@ -242,15 +245,21 @@
                         </div>
                     </div>
 
-                    <!-- B. Tempat Tinggal -->
+                    <!-- B. Tempat Tinggal Siswa (Detailed) -->
                     <div class="space-y-4 pt-4 border-t border-slate-100">
                         <div class="flex items-center gap-2">
                             <div class="w-6 h-6 rounded bg-emerald-100 text-emerald-600 flex items-center justify-center"><i data-lucide="home" class="w-3 h-3"></i></div>
-                            <h3 class="font-black text-slate-700 uppercase tracking-wide text-xs">B. Tempat Tinggal</h3>
+                            <h3 class="font-black text-slate-700 uppercase tracking-wide text-xs">B. Alamat Lengkap Murid</h3>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Lengkap <span class="text-rose-500">*</span></label><textarea class="form-input" name="alamat" required rows="2"></textarea></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. Telepon/HP</label><input type="tel" class="form-input" name="noTelepon" placeholder="08..."></div>
+                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Nomor Rumah & Jalan <span class="text-rose-500">*</span></label><input type="text" class="form-input" name="noRumah" required placeholder="Contoh: Jl. Mawar No. 12"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Dusun/Lingkungan</label><input type="text" class="form-input" name="dusun"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">RT / RW</label><div class="flex gap-2"><input type="text" class="form-input" name="rt" placeholder="001" style="width:50%"><input type="text" class="form-input" name="rw" placeholder="002" style="width:50%"></div></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Desa / Kelurahan</label><input type="text" class="form-input" name="kelurahan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kecamatan</label><input type="text" class="form-input" name="kecamatan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota / Kabupaten</label><input type="text" class="form-input" name="kota"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kode Pos</label><input type="text" class="form-input" name="kodePos" maxlength="5"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. Telepon/HP Murid</label><input type="tel" class="form-input" name="noTelepon" placeholder="08..."></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tinggal Dengan</label><select class="form-input" name="tinggalDengan"><option value="">Pilih</option><option>Orang Tua</option><option>Saudara</option><option>Asrama</option><option>Kost</option><option>Lainnya</option></select></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Jarak ke Sekolah (km)</label><input type="number" class="form-input" name="jarakSekolah" step="0.1" min="0"></div>
                         </div>
@@ -288,7 +297,7 @@
                         </div>
                     </div>
 
-                    <!-- E. Ayah -->
+                    <!-- E. Ayah (Detailed + Phone) -->
                     <div class="space-y-4 pt-4 border-t border-slate-100">
                         <div class="flex items-center gap-2">
                             <div class="w-6 h-6 rounded bg-blue-100 text-blue-600 flex items-center justify-center"><i data-lucide="users" class="w-3 h-3"></i></div>
@@ -296,18 +305,31 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Nama Ayah</label><input type="text" class="form-input" name="namaAyah"></div>
-                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tempat & Tanggal Lahir Ayah</label><input type="text" class="form-input" name="tempatTanggalLahirAyah"></div>
+                            
+                            <!-- Split TTL Ayah -->
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Lahir Ayah</label><input type="text" class="form-input" name="tempatLahirAyah"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tanggal Lahir Ayah</label><input type="date" class="form-input" name="tanggalLahirAyah"></div>
+                            
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Agama Ayah</label><select class="form-input" name="agamaAyah"><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kewarganegaraan Ayah</label><input type="text" class="form-input" name="kewarganegaraanAyah" value="WNI"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Pendidikan Ayah</label><input type="text" class="form-input" name="pendidikanAyah"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Pekerjaan Ayah</label><input type="text" class="form-input" name="pekerjaanAyah"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Penghasilan per Bulan</label><input type="text" class="form-input" name="penghasilanAyah" placeholder="Rp"></div>
-                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Rumah Ayah</label><input type="text" class="form-input" name="alamatAyah"></div>
+                            
+                            <!-- NEW: No HP Ayah -->
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. HP Ayah</label><input type="tel" class="form-input" name="hpAyah" placeholder="08..."></div>
+                            
+                            <!-- Split Alamat Ayah -->
+                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Ayah (Jalan/No)</label><input type="text" class="form-input" name="alamatAyahJalan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Desa/Kel Ayah</label><input type="text" class="form-input" name="alamatAyahKel"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kecamatan Ayah</label><input type="text" class="form-input" name="alamatAyahKec"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Ayah</label><input type="text" class="form-input" name="alamatAyahKota"></div>
+                            
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Status Ayah</label><select class="form-input" name="statusAyah"><option value="">Pilih</option><option>Masih Hidup</option><option>Meninggal Dunia</option></select></div>
                         </div>
                     </div>
 
-                    <!-- F. Ibu -->
+                    <!-- F. Ibu (Detailed + Phone) -->
                     <div class="space-y-4 pt-4 border-t border-slate-100">
                          <div class="flex items-center gap-2">
                             <div class="w-6 h-6 rounded bg-pink-100 text-pink-600 flex items-center justify-center"><i data-lucide="users" class="w-3 h-3"></i></div>
@@ -315,18 +337,31 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Nama Ibu</label><input type="text" class="form-input" name="namaIbu"></div>
-                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tempat & Tanggal Lahir Ibu</label><input type="text" class="form-input" name="tempatTanggalLahirIbu"></div>
+                            
+                            <!-- Split TTL Ibu -->
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Lahir Ibu</label><input type="text" class="form-input" name="tempatLahirIbu"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tanggal Lahir Ibu</label><input type="date" class="form-input" name="tanggalLahirIbu"></div>
+                            
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Agama Ibu</label><select class="form-input" name="agamaIbu"><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kewarganegaraan Ibu</label><input type="text" class="form-input" name="kewarganegaraanIbu" value="WNI"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Pendidikan Ibu</label><input type="text" class="form-input" name="pendidikanIbu"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Pekerjaan Ibu</label><input type="text" class="form-input" name="pekerjaanIbu"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Penghasilan per Bulan</label><input type="text" class="form-input" name="penghasilanIbu" placeholder="Rp"></div>
-                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Rumah Ibu</label><input type="text" class="form-input" name="alamatIbu"></div>
+                            
+                            <!-- NEW: No HP Ibu -->
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. HP Ibu</label><input type="tel" class="form-input" name="hpIbu" placeholder="08..."></div>
+                            
+                            <!-- Split Alamat Ibu -->
+                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Ibu (Jalan/No)</label><input type="text" class="form-input" name="alamatIbuJalan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Desa/Kel Ibu</label><input type="text" class="form-input" name="alamatIbuKel"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kecamatan Ibu</label><input type="text" class="form-input" name="alamatIbuKec"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Ibu</label><input type="text" class="form-input" name="alamatIbuKota"></div>
+
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Status Ibu</label><select class="form-input" name="statusIbu"><option value="">Pilih</option><option>Masih Hidup</option><option>Meninggal Dunia</option></select></div>
                         </div>
                     </div>
 
-                    <!-- G. Wali -->
+                    <!-- G. Wali (Detailed + Phone) -->
                     <div class="space-y-4 pt-4 border-t border-slate-100">
                         <div class="flex items-center gap-2">
                             <div class="w-6 h-6 rounded bg-purple-100 text-purple-600 flex items-center justify-center"><i data-lucide="shield" class="w-3 h-3"></i></div>
@@ -334,12 +369,26 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Nama Wali</label><input type="text" class="form-input" name="namaWali"></div>
-                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tempat & Tanggal Lahir Wali</label><input type="text" class="form-input" name="tempatTanggalLahirWali"></div>
+                            
+                            <!-- Split TTL Wali -->
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Lahir Wali</label><input type="text" class="form-input" name="tempatLahirWali"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Tanggal Lahir Wali</label><input type="date" class="form-input" name="tanggalLahirWali"></div>
+                            
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Agama Wali</label><select class="form-input" name="agamaWali"><option value="">Pilih</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option></select></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kewarganegaraan Wali</label><input type="text" class="form-input" name="kewarganegaraanWali" value="WNI"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Pekerjaan Wali</label><input type="text" class="form-input" name="pekerjaanWali"></div>
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Penghasilan per Bulan</label><input type="text" class="form-input" name="penghasilanWali" placeholder="Rp"></div>
-                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Rumah/No. Telp Wali</label><input type="text" class="form-input" name="alamatWali"></div>
+                            
+                            <!-- NEW: No HP Wali -->
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. HP Wali</label><input type="tel" class="form-input" name="hpWali" placeholder="08..."></div>
+                            
+                            <!-- Split Alamat Wali -->
+                            <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Alamat Wali (Jalan/No)</label><input type="text" class="form-input" name="alamatWaliJalan"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Desa/Kel Wali</label><input type="text" class="form-input" name="alamatWaliKel"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kecamatan Wali</label><input type="text" class="form-input" name="alamatWaliKec"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Kota Wali</label><input type="text" class="form-input" name="alamatWaliKota"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">No. Telp Alternatif Wali</label><input type="text" class="form-input" name="alamatWaliTelp"></div>
+
                             <div><label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Status Wali</label><select class="form-input" name="statusWali"><option value="">Pilih</option><option>Masih Hidup</option><option>Meninggal Dunia</option></select></div>
                         </div>
                     </div>
@@ -392,7 +441,7 @@
                     <option value="APHP">🌾 APHP</option>
                     <option value="DPIB">🏗️ DPIB</option>
                     <option value="PSPT">📺 PSPT</option>
-                    <option value="KKBT">🎨 KKBT</option>
+                    <option value="KKBT"> KKBT</option>
                     <option value="TKR">🚗 TKR</option>
                 </select>
                 <div class="flex gap-2 w-full md:w-auto">
@@ -481,14 +530,19 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Nama Lengkap</label><input class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eNamaLengkap" required></div>
-                        <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Tempat Lahir</label><input class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eTempatLahir" required></div>
+                        
+                        <!-- Split TTL in Edit -->
+                        <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Kota Lahir</label><input class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eTempatLahir" required></div>
                         <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Tanggal Lahir</label><input type="date" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eTanggalLahir" required></div>
+                        
                         <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Jenis Kelamin</label><select class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold outline-none" id="eJenisKelamin"><option>Laki-laki</option><option>Perempuan</option></select></div>
                         <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Status Murid</label><select class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold outline-none" id="eStatus"><option>Aktif</option><option>Lulus</option><option>Pindah</option><option>Drop Out</option></select></div>
                         
                         <div class="md:col-span-2 border-t border-slate-100 my-2"></div>
-                        <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Alamat Lengkap</label><textarea class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none resize-none" id="eAlamat" required rows="2"></textarea></div>
-                        <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">No. Telepon</label><input class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eNoTelepon"></div>
+                        
+                        <!-- Address Parsing in Edit -->
+                        <div class="md:col-span-2"><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Alamat Lengkap (Gabungan)</label><textarea class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none resize-none" id="eAlamat" required rows="2"></textarea></div>
+                        <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">No. Telepon Murid</label><input class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eNoTelepon"></div>
                         <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Nama Ayah</label><input class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eNamaAyah"></div>
                         <div><label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Nama Ibu</label><input class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-bold focus:border-indigo-500 outline-none" id="eNamaIbu"></div>
                     </div>
@@ -511,6 +565,10 @@ let currentPage = 1;
 const itemsPerPage = 10;
 
 const $ = id => document.getElementById(id);
+
+// --- HELPER FUNCTIONS ---
+
+// Fungsi Toast
 const toast = (m,t='ok') => { 
     const el = $('toast'); const content = $('toastContent'); const icon = $('toastIcon'); const msg = $('toastMessage');
     msg.textContent = m; el.classList.remove('hide');
@@ -525,9 +583,46 @@ const toast = (m,t='ok') => {
 const showModal = id => $(id).classList.remove('hide');
 const hideModal = id => $(id).classList.add('hide');
 const fmtDate = d => d ? new Date(d).toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'}) : '-';
-const toInputDate = d => d ? new Date(d).toISOString().split('T')[0] : '';
+
+// FUNGSI KRUSIAL: Mengubah berbagai format tanggal menjadi YYYY-MM-DD TANPA terpengaruh timezone
+function parseDateToInput(dateStr) {
+    if (!dateStr) return '';
+    
+    // Jika sudah format YYYY-MM-DD (standar ISO dari AppScript baru), kembalikan apa adanya
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(dateStr))) {
+        return String(dateStr);
+    }
+
+    // Coba parsing manual untuk format DD-MM-YYYY atau DD/MM/YYYY (fallback data lama)
+    const parts = String(dateStr).match(/(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/);
+    
+    if (parts) {
+        const day = parts[1].padStart(2, '0');
+        const month = parts[2].padStart(2, '0');
+        const year = parts[3];
+        return `${year}-${month}-${day}`;
+    }
+
+    // Fallback terakhir: Jika ada karakter 'T' (format ISO lengkap dengan waktu), potong saja
+    if (typeof dateStr === 'string' && dateStr.includes('T')) {
+        return dateStr.split('T')[0];
+    }
+
+    return '';
+}
+
+function formatDateForTTL(dateString) {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+}
 
 const JURUSAN_NAMES = { 'APHP': 'Agribisnis Pengolahan Hasil Pertanian', 'DPIB': 'Desain Pemodelan & Informasi Bangunan', 'PSPT': 'Produksi & Siaran Program Televisi', 'KKBT': 'Kriya Kreatif Batik & Tekstil', 'TKR': 'Teknik Kendaraan Ringan' };
+
+// --- NAVIGATION & AUTH ---
 
 function navigateTo(view) {
     if (role === 'guest') { showModal('loginModal'); return; }
@@ -575,16 +670,97 @@ window.onload = () => {
     } else { showModal('loginModal'); }
 };
 
+// --- FORM SUBMISSION (COMBINING DATA WITH NEW PHONE FIELDS) ---
+
 async function submitForm(e){
-    e.preventDefault(); const b=$('btnSave'); b.innerHTML='<span class="animate-pulse">Menyimpan...</span>'; b.disabled=true;
-    const d={action:'insert', jurusan: currentJurusan}; new FormData(e.target).forEach((v,k)=>d[k]=v);
+    e.preventDefault(); 
+    const b=$('btnSave'); 
+    b.innerHTML='<span class="animate-pulse">Menyimpan...</span>'; 
+    b.disabled=true;
+    
+    const formData = new FormData(e.target);
+    const d = { action:'insert', jurusan: currentJurusan };
+    formData.forEach((v,k) => d[k]=v);
+    
+    // Combine Student Address
+    const noRumah = formData.get('noRumah') || '';
+    const dusun = formData.get('dusun') || '';
+    const rt = formData.get('rt') || '';
+    const rw = formData.get('rw') || '';
+    const kelurahan = formData.get('kelurahan') || '';
+    const kecamatan = formData.get('kecamatan') || '';
+    const kota = formData.get('kota') || '';
+    const kodePos = formData.get('kodePos') || '';
+    
+    let addressParts = [noRumah, dusun, `RT ${rt}/RW ${rw}`, kelurahan, kecamatan, kota, kodePos];
+    let finalAddress = addressParts.filter(part => part && part.trim() !== '' && part !== 'RT /RW ').join(', ');
+    d['alamat'] = finalAddress; 
+    
+    // Combine Student TTL
+    const tempat = formData.get('tempatLahir') || '';
+    const tanggal = formData.get('tanggalLahir') || '';
+    if(tempat && tanggal) d['ttl_combined'] = `${tempat}, ${formatDateForTTL(tanggal)}`;
+
+    // Combine Father Data
+    const tAyah = formData.get('tempatLahirAyah') || '';
+    const tgAyah = formData.get('tanggalLahirAyah') || '';
+    if(tAyah && tgAyah) d['tempatTanggalLahirAyah'] = `${tAyah}, ${formatDateForTTL(tgAyah)}`;
+    
+    const alAyahJ = formData.get('alamatAyahJalan') || '';
+    const alAyahK = formData.get('alamatAyahKel') || '';
+    const alAyahKc = formData.get('alamatAyahKec') || '';
+    const alAyahKo = formData.get('alamatAyahKota') || '';
+    let addrAyah = [alAyahJ, alAyahK, alAyahKc, alAyahKo].filter(p => p && p.trim() !== '').join(', ');
+    if(addrAyah) d['alamatAyah'] = addrAyah;
+    
+    // NEW: Send Father's Phone Number directly
+    d['hpAyah'] = formData.get('hpAyah') || '';
+
+    // Combine Mother Data
+    const tIbu = formData.get('tempatLahirIbu') || '';
+    const tgIbu = formData.get('tanggalLahirIbu') || '';
+    if(tIbu && tgIbu) d['tempatTanggalLahirIbu'] = `${tIbu}, ${formatDateForTTL(tgIbu)}`;
+    
+    const alIbuJ = formData.get('alamatIbuJalan') || '';
+    const alIbuK = formData.get('alamatIbuKel') || '';
+    const alIbuKc = formData.get('alamatIbuKec') || '';
+    const alIbuKo = formData.get('alamatIbuKota') || '';
+    let addrIbu = [alIbuJ, alIbuK, alIbuKc, alIbuKo].filter(p => p && p.trim() !== '').join(', ');
+    if(addrIbu) d['alamatIbu'] = addrIbu;
+    
+    // NEW: Send Mother's Phone Number directly
+    d['hpIbu'] = formData.get('hpIbu') || '';
+
+    // Combine Guardian Data
+    const tWali = formData.get('tempatLahirWali') || '';
+    const tgWali = formData.get('tanggalLahirWali') || '';
+    if(tWali && tgWali) d['tempatTanggalLahirWali'] = `${tWali}, ${formatDateForTTL(tgWali)}`;
+    
+    const alWaliJ = formData.get('alamatWaliJalan') || '';
+    const alWaliK = formData.get('alamatWaliKel') || '';
+    const alWaliKc = formData.get('alamatWaliKec') || '';
+    const alWaliKo = formData.get('alamatWaliKota') || '';
+    const alWaliT = formData.get('alamatWaliTelp') || '';
+    let addrWali = [alWaliJ, alWaliK, alWaliKc, alWaliKo, alWaliT].filter(p => p && p.trim() !== '').join(', ');
+    if(addrWali) d['alamatWali'] = addrWali;
+    
+    // NEW: Send Guardian's Phone Number directly
+    d['hpWali'] = formData.get('hpWali') || '';
+
     try{
-        const r=await fetch(API,{method:'POST',body:JSON.stringify(d)}); const res=await r.json();
-        if(res.success){ toast('Data berhasil disimpan! No: '+res.noUrut); e.target.reset(); navigateTo('jurusan'); } 
-        else toast(res.message,'er');
+        const r=await fetch(API,{method:'POST',body:JSON.stringify(d)}); 
+        const res=await r.json();
+        if(res.success){ 
+            toast('Data berhasil disimpan! No: '+res.noUrut); 
+            e.target.reset(); 
+            navigateTo('jurusan'); 
+        } else toast(res.message,'er');
     }catch(e){ toast('Gagal menyimpan!','er') }
-    b.innerHTML='<i data-lucide="save" class="w-4 h-4"></i> Simpan Data'; b.disabled=false; lucide.createIcons();
+    b.innerHTML='<i data-lucide="save" class="w-4 h-4"></i> Simpan Data'; b.disabled=false; 
+    lucide.createIcons();
 }
+
+// --- DATA LOADING & RENDERING ---
 
 async function loadData(){
     if(role !== 'admin') { toast('Akses ditolak!','er'); return; }
@@ -667,20 +843,70 @@ function renderPagination(totalPages, startIndex, endIndex) {
     pageNumbers.innerHTML = pagesHtml;
 }
 
+// --- EDIT FUNCTION (FIXED DATE PARSING) ---
+
 function edit(r){
     $('eRow').value=r.noUrut; $('eJurusan').value=r.jurusan; $('eNisn').value=r.nisn; $('eNik').value=r.nik; 
-    $('eNamaLengkap').value=r.namaLengkap||''; $('eTempatLahir').value=r.tempatLahir||''; 
-    $('eTanggalLahir').value=toInputDate(r.tanggalLahir); $('eJenisKelamin').value=r.jenisKelamin||'';
-    $('eAlamat').value=r.alamat||''; $('eStatus').value=r.status||'Aktif';
+    $('eNamaLengkap').value=r.namaLengkap||''; 
+    $('eJenisKelamin').value=r.jenisKelamin||'';
+    $('eAlamat').value=r.alamat||''; 
+    $('eStatus').value=r.status||'Aktif';
     $('eNoTelepon').value=r.noTelepon||'';
     $('eNamaAyah').value=r.namaAyah||'';
     $('eNamaIbu').value=r.namaIbu||'';
+
+    // 1. Parse Student TTL
+    let ttl = r.ttl_combined || "";
+    if (!ttl && r.tempatLahir && r.tanggalLahir) {
+         ttl = r.tempatLahir + (r.tanggalLahir ? `, ${r.tanggalLahir}` : '');
+    }
+    
+    if (ttl.includes(',')) {
+        const parts = ttl.split(',');
+        $('eTempatLahir').value = parts[0].trim();
+        // Gunakan helper parseDateToInput untuk menangani DD-MM-YYYY atau DD/MM/YYYY
+        if (parts[1]) {
+            $('eTanggalLahir').value = parseDateToInput(parts[1].trim());
+        }
+    } else {
+        $('eTempatLahir').value = ttl;
+        $('eTanggalLahir').value = '';
+    }
+
     showModal('editModal');
 }
 
 async function submitEdit(e){
     e.preventDefault(); const b=$('btnEdit'); b.innerHTML='<span class="animate-pulse">Menyimpan...</span>'; b.disabled=true;
-    const d={ action:'update', rowNum:$('eRow').value, jurusan:$('eJurusan').value, nisn:$('eNisn').value, namaLengkap:$('eNamaLengkap').value, tempatLahir:$('eTempatLahir').value, tanggalLahir:$('eTanggalLahir').value, jenisKelamin:$('eJenisKelamin').value, alamat:$('eAlamat').value, status:$('eStatus').value, noTelepon:$('eNoTelepon').value, namaAyah:$('eNamaAyah').value, namaIbu:$('eNamaIbu').value };
+    
+    // Re-combine Student TTL for update
+    const tempat = $('eTempatLahir').value;
+    const tanggal = $('eTanggalLahir').value;
+    let ttlCombined = "";
+    if (tempat && tanggal) {
+        const d = new Date(tanggal);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        ttlCombined = `${tempat}, ${day}-${month}-${year}`;
+    }
+
+    const d={ 
+        action:'update', 
+        rowNum:$('eRow').value, 
+        jurusan:$('eJurusan').value, 
+        nisn:$('eNisn').value, 
+        namaLengkap:$('eNamaLengkap').value, 
+        tempatLahir: tempat,
+        tanggalLahir: tanggal,
+        ttl_combined: ttlCombined, 
+        jenisKelamin:$('eJenisKelamin').value, 
+        alamat:$('eAlamat').value, 
+        status:$('eStatus').value, 
+        noTelepon:$('eNoTelepon').value, 
+        namaAyah:$('eNamaAyah').value, 
+        namaIbu:$('eNamaIbu').value 
+    };
     try{
         const r=await fetch(API,{method:'POST',body:JSON.stringify(d)}); const res=await r.json();
         if(res.success){ toast('Data berhasil diperbarui!'); hideModal('editModal'); loadData(); } else toast(res.message,'er');
