@@ -924,9 +924,101 @@ async function del(nm,nama,jurusan){
 
 function exportXls(){
     if(!dataFilter.length) return toast('Tidak ada data untuk diexport!','er');
-    let fn = 'BukuInduk_Skarida'; if ($('filterJurusan').value) fn += `_${$('filterJurusan').value}`; fn += `_${new Date().toISOString().slice(0,10)}.xlsx`;
-    const ws=XLSX.utils.json_to_sheet(dataFilter.map((r,i)=>({'No': i+1, 'NISN': r.nisn, 'NIK': r.nik, 'Nama Lengkap': r.namaLengkap, 'Nama Panggilan': r.namaPanggilan, 'Jenis Kelamin': r.jenisKelamin, 'Tempat Lahir': r.tempatLahir, 'Tanggal Lahir': fmtDate(r.tanggalLahir), 'Agama': r.agama, 'Alamat': r.alamat, 'No Telepon': r.noTelepon, 'Nama Ayah': r.namaAyah, 'Pekerjaan Ayah': r.pekerjaanAyah, 'Nama Ibu': r.namaIbu, 'Pekerjaan Ibu': r.pekerjaanIbu, 'Status': r.status })));
-    const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Data Murid'); XLSX.writeFile(wb, fn); toast(`File "${fn}" berhasil didownload!`);
+    
+    // Nama file dinamis berdasarkan filter
+    let fn = 'BukuInduk_Skarida';
+    if ($('filterJurusan').value) fn += `_${$('filterJurusan').value}`;
+    fn += `_${new Date().toISOString().slice(0,10)}.xlsx`;
+    
+    // Mapping data ke format Excel 67 Kolom (Sesuai struktur Sheet terbaru)
+    const excelData = dataFilter.map((r, i) => ({
+        'No': i + 1,
+        'NISN': r.nisn,
+        'NIK': r.nik,
+        'Nama Lengkap': r.namaLengkap,
+        'Nama Panggilan': r.namaPanggilan,
+        'Jenis Kelamin': r.jenisKelamin,
+        'Tempat Lahir': r.tempatLahir,
+        'Tanggal Lahir': fmtDate(r.tanggalLahir),
+        'Agama': r.agama,
+        'Kewarganegaraan': r.kewarganegaraan,
+        'Anak Ke': r.anakKe,
+        'Jml Saudara Kandung': r.jmlSaudaraKandung,
+        'Jml Saudara Tiri': r.jmlSaudaraTiri,
+        'Jml Saudara Angkat': r.jmlSaudaraAngkat,
+        'Status Yatim Piatu': r.statusYatim,
+        'Bahasa Sehari-hari': r.bahasaSehariHari,
+        'Alamat': r.alamat,
+        'No Telepon': r.noTelepon,
+        'Tinggal Dengan': r.tinggalDengan,
+        'Jarak ke Sekolah': r.jarakSekolah,
+        'Golongan Darah': r.golonganDarah,
+        'Penyakit': r.penyakit,
+        'Kelainan Jasmani': r.kelainanJasmani,
+        'Tinggi Badan': r.tinggiBadan,
+        'Berat Badan': r.beratBadan,
+        'Pendidikan Sebelumnya': r.pendidikanSebelumnya,
+        'Nomor Ijazah': r.nomorIjazah,
+        'Nomor STL': r.nomorSTL,
+        'Lama Belajar': r.lamaBelajar,
+        'Pindahan Dari': r.pindahanDari,
+        'Diterima di Kelas': r.diterimaKelas,
+        'Tanggal Diterima': fmtDate(r.tanggalDiterima),
+        'Nama Ayah': r.namaAyah,
+        'Tempat Tanggal Lahir Ayah': r.tempatTanggalLahirAyah,
+        'Agama Ayah': r.agamaAyah,
+        'Kewarganegaraan Ayah': r.kewarganegaraanAyah,
+        'Pendidikan Ayah': r.pendidikanAyah,
+        'Pekerjaan Ayah': r.pekerjaanAyah,
+        'Penghasilan Ayah': r.penghasilanAyah,
+        'HP Ayah': r.hpAyah,           // Field Baru
+        'Alamat Ayah': r.alamatAyah,
+        'Status Ayah': r.statusAyah,
+        'Nama Ibu': r.namaIbu,
+        'Tempat Tanggal Lahir Ibu': r.tempatTanggalLahirIbu,
+        'Agama Ibu': r.agamaIbu,
+        'Kewarganegaraan Ibu': r.kewarganegaraanIbu,
+        'Pendidikan Ibu': r.pendidikanIbu,
+        'Pekerjaan Ibu': r.pekerjaanIbu,
+        'Penghasilan Ibu': r.penghasilanIbu,
+        'HP Ibu': r.hpIbu,             // Field Baru
+        'Alamat Ibu': r.alamatIbu,
+        'Status Ibu': r.statusIbu,
+        'Nama Wali': r.namaWali,
+        'Tempat Tanggal Lahir Wali': r.tempatTanggalLahirWali,
+        'Agama Wali': r.agamaWali,
+        'Kewarganegaraan Wali': r.kewarganegaraanWali,
+        'Pekerjaan Wali': r.pekerjaanWali,
+        'Penghasilan Wali': r.penghasilanWali,
+        'HP Wali': r.hpWali,           // Field Baru
+        'Alamat Wali': r.alamatWali,
+        'Status Wali': r.statusWali,
+        'Kegemaran Kesenian': r.kegemaranKesenian,
+        'Kegemaran Olahraga': r.kegemaranOlahraga,
+        'Kegemaran Organisasi': r.kegemaranOrganisasi,
+        'Kegemaran Lain': r.kegemaranLain,
+        'Status': r.status
+    }));
+    
+    // Konfigurasi lebar kolom otomatis agar rapi saat dibuka di Excel
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    
+    // Set lebar kolom (A=No, B=NISN, dst...)
+    ws['!cols'] = [
+        {wch:5},{wch:12},{wch:18},{wch:30},{wch:15},{wch:12},{wch:15},{wch:12},
+        {wch:10},{wch:12},{wch:6},{wch:6},{wch:6},{wch:6},{wch:14},{wch:15},
+        {wch:40},{wch:15},{wch:12},{wch:10},{wch:8},{wch:20},{wch:20},{wch:10},
+        {wch:10},{wch:15},{wch:20},{wch:20},{wch:8},{wch:20},{wch:10},{wch:12},
+        {wch:20},{wch:20},{wch:10},{wch:12},{wch:12},{wch:12},{wch:12},{wch:15}, // HP Ayah
+        {wch:40},{wch:12},{wch:20},{wch:20},{wch:10},{wch:12},{wch:12},{wch:12},
+        {wch:12},{wch:15},{wch:40},{wch:12},{wch:20},{wch:20},{wch:10},{wch:12},
+        {wch:12},{wch:12},{wch:15},{wch:40},{wch:12},{wch:15},{wch:15},{wch:15},{wch:10}
+    ];
+    
+    XLSX.utils.book_append_sheet(wb, ws, 'Data Murid');
+    XLSX.writeFile(wb, fn); 
+    toast(`File "${fn}" berhasil didownload! (${dataFilter.length} data)`);
 }
 </script>
 </body>
